@@ -1,0 +1,211 @@
+[{
+	"value": "01",
+	"label": "Araba/Álava",
+	"cost": "100"
+}, {
+	"value": "02",
+	"label": "Albacete",
+	"cost": "100"
+}, {
+	"value": "03",
+	"label": "Alicante/Alacant",
+	"cost": "100"
+}, {
+	"value": "04",
+	"label": "Almería",
+	"cost": "100"
+}, {
+	"value": "05",
+	"label": "Ávila",
+	"cost": "100"
+}, {
+	"value": "06",
+	"label": "Badajoz",
+	"cost": "100"
+}, {
+	"value": "07",
+	"label": "Balears, Illes",
+	"cost": "100"
+}, {
+	"value": "08",
+	"label": "Barcelona",
+	"cost": "100"
+}, {
+	"value": "09",
+	"label": "Burgos",
+	"cost": "100"
+}, {
+	"value": "10",
+	"label": "Cáceres",
+	"cost": "100"
+}, {
+	"value": "11",
+	"label": "Cádiz",
+	"cost": "100"
+}, {
+	"value": "12",
+	"label": "Castellón/Castelló",
+	"cost": "100"
+}, {
+	"value": "13",
+	"label": "Ciudad Real",
+	"cost": "100"
+}, {
+	"value": "14",
+	"label": "Córdoba",
+	"cost": "100"
+}, {
+	"value": "15",
+	"label": "Coruña, A",
+	"cost": "100"
+}, {
+	"value": "16",
+	"label": "Cuenca",
+	"cost": "100"
+}, {
+	"value": "17",
+	"label": "Girona",
+	"cost": "100"
+}, {
+	"value": "18",
+	"label": "Granada",
+	"cost": "100",
+	"isLocal": "true",
+	"localIn": "Granada"
+}, {
+	"value": "19",
+	"label": "Guadalajara",
+	"cost": "100"
+}, {
+	"value": "20",
+	"label": "Gipuzkoa",
+	"cost": "100"
+}, {
+	"value": "21",
+	"label": "Huelva",
+	"cost": "100"
+}, {
+	"value": "22",
+	"label": "Huesca",
+	"cost": "100"
+}, {
+	"value": "23",
+	"label": "Jaén",
+	"cost": "100"
+}, {
+	"value": "24",
+	"label": "León",
+	"cost": "100"
+}, {
+	"value": "25",
+	"label": "Lleida",
+	"cost": "100"
+}, {
+	"value": "26",
+	"label": "Rioja, La",
+	"cost": "100"
+}, {
+	"value": "27",
+	"label": "Lugo",
+	"cost": "100"
+}, {
+	"value": "28",
+	"label": "Madrid",
+	"cost": "100"
+}, {
+	"value": "29",
+	"label": "Málaga",
+	"cost": "100"
+}, {
+	"value": "30",
+	"label": "Murcia",
+	"cost": "100"
+}, {
+	"value": "31",
+	"label": "Navarra",
+	"cost": "100"
+}, {
+	"value": "32",
+	"label": "Ourense",
+	"cost": "100"
+}, {
+	"value": "33",
+	"label": "Asturias",
+	"cost": "100"
+}, {
+	"value": "34",
+	"label": "Palencia",
+	"cost": "100"
+}, {
+	"value": "35",
+	"label": "Palmas, Las",
+	"cost": "100"
+}, {
+	"value": "36",
+	"label": "Pontevedra",
+	"cost": "100"
+}, {
+	"value": "37",
+	"label": "Salamanca",
+	"cost": "100"
+}, {
+	"value": "38",
+	"label": "Santa Cruz de Tenerife",
+	"cost": "100"
+}, {
+	"value": "39",
+	"label": "Cantabria",
+	"cost": "100"
+}, {
+	"value": "40",
+	"label": "Segovia",
+	"cost": "100"
+}, {
+	"value": "41",
+	"label": "Sevilla",
+	"cost": "100"
+}, {
+	"value": "42",
+	"label": "Soria",
+	"cost": "100"
+}, {
+	"value": "43",
+	"label": "Tarragona",
+	"cost": "100"
+}, {
+	"value": "44",
+	"label": "Teruel",
+	"cost": "100"
+}, {
+	"value": "45",
+	"label": "Toledo",
+	"cost": "100"
+}, {
+	"value": "46",
+	"label": "Valencia/València",
+	"cost": "100"
+}, {
+	"value": "47",
+	"label": "Valladolid",
+	"cost": "100"
+}, {
+	"value": "48",
+	"label": "Bizkaia",
+	"cost": "100"
+}, {
+	"value": "49",
+	"label": "Zamora",
+	"cost": "100"
+}, {
+	"value": "50",
+	"label": "Zaragoza",
+	"cost": "100"
+}, {
+	"value": "51",
+	"label": "Ceuta",
+	"cost": "100"
+}, {
+	"value": "52",
+	"label": "Melilla",
+	"cost": "100"
+}]

@@ -1,7 +1,10 @@
 const {model, Schema} = require('mongoose');
 
 const PricesSchema = new Schema({
-    brand: String,
+    brand: {
+        type: Schema.Types.ObjectId,
+        ref: 'Brand'
+    },
     model: String,
     prices: Object
 }, {

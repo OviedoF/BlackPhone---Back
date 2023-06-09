@@ -7,4 +7,6 @@ router.post('/', pricesTableController.createPrice);
 router.put('/', pricesTableController.updatePrices)
 router.delete('/:id', pricesTableController.deletePrice);
 
+router.post('/calculateBudget', pricesTableController.calculateBudget);
+
 module.exports = router;

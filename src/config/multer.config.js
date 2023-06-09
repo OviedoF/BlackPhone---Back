@@ -24,13 +24,9 @@ const config = multer({
         }
     }
 }).fields([
-    {name: 'images', maxCount: 999},
-    {name: 'coverImage', maxCount: 1},
-    {name: 'userImage', maxCount: 1},
-    {name: 'logo', maxCount: 1},
-    {name: 'excel', maxCount: 1},
-    {name: 'logoImage', maxCount: 1},
-    {name: 'perfilImage', maxCount: 1},
-]); // la consulta va a responder a la key "images" en la petición.
+    {name: 'images', maxCount: 10},
+    {name: 'phone_photos', maxCount: 10},
+    {name: 'fault_photos', maxCount: 10},
+]); 
 
 module.exports = config;

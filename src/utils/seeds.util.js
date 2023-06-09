@@ -1,4 +1,6 @@
 const PricesTableInfo = require('../models/PricesTableInfo.model');
+const Province = require('../models/Province.model');
+const provinces = require('./provinces.json');
 
 const initialPricesTableInfo = async () => {
     const pricesTableInfoDocs = await PricesTableInfo.find();
@@ -74,8 +76,21 @@ const initialPricesTableInfo = async () => {
     console.log('[SEEDER] PricesTableInfo seeded! 🌱');
 }
 
+const setInitialProvinces = async () => {
+    const provincesDocs = await Province.find();
+
+    if (provincesDocs.length > 0) return;
+
+    const provincesArray = JSON.parse(JSON.stringify(provinces));
+
+    await Province.insertMany(provincesArray);
+    
+    console.log('[SEEDER] Provinces seeded! 🌱');
+}
+
 const runSeeders = async () => {
     await initialPricesTableInfo();
+    await setInitialProvinces();
 }
 
 module.exports = runSeeders;
