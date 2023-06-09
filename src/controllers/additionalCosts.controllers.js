@@ -1,4 +1,4 @@
-const AdditionalCosts = require('../models/additionalCosts.model');
+const AdditionalCosts = require('../models/AdditionalCosts.model');
 const path = require('path');
 require('dotenv').config()
 const {deleteReqImages, deleteImage} = require('../utils/images.utils');
