@@ -68,7 +68,7 @@ faultsController.updateFault = async (req, res) => {
         const areasValues = ['local', 'outside', 'wholesale']
 
         const oldFault = await Faults.findById(req.body._id);
-
+        const PricesTableInfoData = await PricesTableInfo.findOne();
         delete req.body._id;
 
         if (req.files && req.files.images) {
@@ -92,7 +92,9 @@ faultsController.updateFault = async (req, res) => {
                     idArea: areasValues[i]
                 });
 
-                if (fault) await Faults.findByIdAndDelete(fault._id);
+                if (fault) {
+                    await Faults.findByIdAndDelete(fault._id);
+                }
             }
         }
 
@@ -112,6 +114,8 @@ faultsController.updateFault = async (req, res) => {
                     idArea: area.value,
                     id: "_id" + req.body.name.replace(/\s/g, ""),
                 });
+
+                PricesTableInfoData.faults.push(newFault._id);
                 await newFault.save();
             }
 
@@ -122,9 +126,10 @@ faultsController.updateFault = async (req, res) => {
                 }, {
                     new: true
                 });
-                console.log(newFault);
             }
         }
+
+        await PricesTableInfoData.save();
 
         const prices = await Prices.find({});
 
@@ -133,12 +138,15 @@ faultsController.updateFault = async (req, res) => {
             const pricesObject = price.prices;
 
             for (let j = 0; j < areasValues.length; j++) {
-                // console.log("_id" + req.body.name.replace(/\s/g, "") + areasValues[j])
+                console.log("_id" + req.body.name.replace(/\s/g, "") + areasValues[j])
                 // console.log(])
-                pricesObject["_id" + req.body.name.replace(/\s/g, "") + areasValues[j]] = pricesObject[oldFault.id + areasValues[j]];
-                delete pricesObject[oldFault.id + areasValues[j]];
+                if(`_id${req.body.name.replace(/\s/g, "")}${areasValues[j]}` !== `${oldFault.id}${areasValues[j]}`) {
+                    pricesObject[`_id${req.body.name.replace(/\s/g, "")}${areasValues[j]}`] = pricesObject[oldFault.id + areasValues[j]];
+                    delete pricesObject[oldFault.id + areasValues[j]];
+                }
             }
 
+            console.log(pricesObject);
             price.prices = pricesObject;
 
             const newPrice = await Prices.findByIdAndUpdate(price._id, {
