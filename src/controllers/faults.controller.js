@@ -1,5 +1,6 @@
 const Faults = require('../models/Faults.model');
 const PricesTableInfo = require('../models/PricesTableInfo.model');
+const Prices = require('../models/Prices.model');
 require('dotenv').config();
 
 const faultsController = {};
@@ -23,7 +24,6 @@ faultsController.getFaults = async (req, res) => {
 faultsController.createFault = async (req, res) => {
     try {
         const areas = JSON.parse(req.body.areas);
-        console.log(areas);
 
         if (req.files && req.files.images) {
             const icon = req.files.images[0].filename;
@@ -64,13 +64,89 @@ faultsController.createFault = async (req, res) => {
 
 faultsController.updateFault = async (req, res) => {
     try {
+        const areas = JSON.parse(req.body.areas);
+        const areasValues = ['local', 'outside', 'wholesale']
+
+        const oldFault = await Faults.findById(req.body._id);
+
+        delete req.body._id;
+
         if (req.files && req.files.images) {
             const icon = req.files.images[0].filename;
 
             req.body.icon = `${process.env.BASE_URL}/uploads/${icon}`;
         }
 
-        await Faults.findByIdAndUpdate(req.params.id, req.body);
+        for (let i = 0; i < areasValues.length; i++) {
+            let isValue = false;
+
+            for (let j = 0; j < areas.length; j++) {
+                if (areas[j].value === areasValues[i]) {
+                    isValue = true;
+                }
+            }
+
+            if (!isValue) {
+                const fault = await Faults.findOne({
+                    id: req.body.id,
+                    idArea: areasValues[i]
+                });
+
+                if (fault) await Faults.findByIdAndDelete(fault._id);
+            }
+        }
+
+        for (let i = 0; i < areas.length; i++) {
+            const area = areas[i];
+
+            const fault = await Faults.findOne({
+                id: req.body.id,
+                idArea: area.value,
+                area: area.label
+            })
+
+            if (!fault) {
+                const newFault = new Faults({
+                    ...req.body,
+                    area: area.label,
+                    idArea: area.value,
+                    id: "_id" + req.body.name.replace(/\s/g, ""),
+                });
+                await newFault.save();
+            }
+
+            if (fault) {
+                const newFault = await Faults.findByIdAndUpdate(fault._id, {
+                    ...req.body,
+                    id: "_id" + req.body.name.replace(/\s/g, ""),
+                }, {
+                    new: true
+                });
+                console.log(newFault);
+            }
+        }
+
+        const prices = await Prices.find({});
+
+        for (let i = 0; i < prices.length; i++) {
+            const price = prices[i];
+            const pricesObject = price.prices;
+
+            for (let j = 0; j < areasValues.length; j++) {
+                // console.log("_id" + req.body.name.replace(/\s/g, "") + areasValues[j])
+                // console.log(])
+                pricesObject["_id" + req.body.name.replace(/\s/g, "") + areasValues[j]] = pricesObject[oldFault.id + areasValues[j]];
+                delete pricesObject[oldFault.id + areasValues[j]];
+            }
+
+            price.prices = pricesObject;
+
+            const newPrice = await Prices.findByIdAndUpdate(price._id, {
+                prices: pricesObject
+            }, {
+                new: true
+            });
+        }
 
         res.status(200).send({
             status: true,
@@ -87,11 +163,22 @@ faultsController.updateFault = async (req, res) => {
 
 faultsController.deleteFault = async (req, res) => {
     try {
-        const fault = await Faults.findByIdAndDelete(req.params.id);
-
+        console.log(req.body);
+        const areas = JSON.parse(req.body.areas);
         const tableInfo = await PricesTableInfo.findOne();
 
-        tableInfo.faults = tableInfo.faults.filter(f => f.toString() !== fault._id.toString());
+        for (let i = 0; i < areas.length; i++) {
+            const area = areas[i];
+
+            const fault = await Faults.findOne({
+                id: req.body.id,
+                idArea: area.value,
+                area: area.label
+            })
+
+            await Faults.findByIdAndDelete(fault._id);
+            tableInfo.faults = tableInfo.faults.filter(f => f.toString() !== fault._id.toString());
+        }
 
         await tableInfo.save();
 

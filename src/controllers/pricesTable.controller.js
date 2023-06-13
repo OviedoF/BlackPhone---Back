@@ -4,7 +4,7 @@ const pricesTableController = {};
 
 pricesTableController.getPricesTableInfo = async (req, res) => {
     try {
-        const pricesTableInfo = await PricesTableInfo.findOne();
+        const pricesTableInfo = await PricesTableInfo.findOne().populate('faults');
         res.status(200).send({
             data: pricesTableInfo,
             message: 'Obtenidos correctamente!',
@@ -152,6 +152,7 @@ pricesTableController.getMainFormData = async (req, res) => {
 pricesTableController.calculateBudget = async (req, res) => {
     try {
         const form = req.body.form;
+        console.log(form);
         const prices = await Prices.find().sort({ createdAt: -1 });
         let area = '';
         let price = 0;
@@ -177,7 +178,7 @@ pricesTableController.calculateBudget = async (req, res) => {
 
         form.faults.forEach(fault => {
             console.log(fault);
-            price += parseInt(priceItem.prices[`${fault.value}${area}`]);
+            price += parseInt(priceItem.prices[`${fault}${area}`]);
         });
 
         console.log(price);

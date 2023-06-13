@@ -4,7 +4,7 @@ const { getFaults, createFault, updateFault, deleteFault } = require('../control
 
 router.get('/', getFaults);
 router.post('/', createFault);
-router.put('/:id', updateFault);
-router.delete('/:id', deleteFault);
+router.put('/', updateFault);
+router.put('/delete', deleteFault);
 
 module.exports = router;
