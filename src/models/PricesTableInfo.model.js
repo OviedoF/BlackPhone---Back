@@ -3,10 +3,11 @@ const {model, Schema} = require('mongoose');
 const PricesTableInfoSchema = new Schema({
     headers: [{
         name: String,
-        area: String,
-        publicName: String,
-        id: String,
-        idArea: String
+        id: String
+    }],
+    faults: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Faults'
     }],
 });
 
