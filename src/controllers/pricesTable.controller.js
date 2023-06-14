@@ -154,7 +154,7 @@ pricesTableController.calculateBudget = async (req, res) => {
         const form = req.body.form;
         console.log(form);
         const prices = await Prices.find().sort({ createdAt: -1 });
-        let area = '';
+        let area = form.isLocal ? 'local' : 'outside';
         let price = 0;
 
         const priceItem = prices.find(price => price.brand.toString() == form.brand.value && price.model == form.model.value);
@@ -165,16 +165,6 @@ pricesTableController.calculateBudget = async (req, res) => {
             status: false,
             code: 401
         });
-
-        if (!form.province.isLocal) area = 'outside';
-
-        if (form.province.isLocal) {
-            if (form.municipie.label === form.province.localIn) {
-                area = 'local' 
-            } else {
-                area = 'outside'
-            }
-        }
 
         form.faults.forEach(fault => {
             console.log(fault);
