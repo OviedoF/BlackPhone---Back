@@ -4,7 +4,6 @@ const morgan = require('morgan');
 const fs = require('fs');
 const cors = require('cors');
 const runSeeders = require('./utils/seeds.util');
-const createInitialAdmin = require('./utils/createInitialAdmin');
 
 // INIT
 const app = express();
@@ -31,9 +30,6 @@ app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 app.use(express.static(publicPath));
 app.use(require(path.join(__dirname, 'config', 'multer.config')));
-
-// CREATE INITIAL ADMIN
-createInitialAdmin();
 
 // ROUTES
 const routeFiles = fs.readdirSync(path.join(__dirname, 'routes')).filter( (file) => file.endsWith(".js") );

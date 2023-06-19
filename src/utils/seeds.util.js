@@ -1,6 +1,8 @@
 const PricesTableInfo = require('../models/PricesTableInfo.model');
 const Province = require('../models/Province.model');
 const provinces = require('./provinces.json');
+const createInitialStatus = require('./createInitialStatus');
+const createInitialAdmin = require('./createInitialAdmin');
 
 const initialPricesTableInfo = async () => {
     const pricesTableInfoDocs = await PricesTableInfo.find();
@@ -91,6 +93,8 @@ const setInitialProvinces = async () => {
 const runSeeders = async () => {
     await initialPricesTableInfo();
     await setInitialProvinces();
+    await createInitialStatus();
+    await createInitialAdmin();
 }
 
 module.exports = runSeeders;

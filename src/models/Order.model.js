@@ -24,6 +24,42 @@ const OrderSchema = new Schema({
     },
     phone_photos: [String],
     fault_photos: [String],
+    fault_details: String,
+    additionalCosts: [Object],
+    brand: String,
+    model: String,
+    faults: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Faults'
+    }],
+    goToTheHome: Boolean,
+    goToTheHomeData: {
+        address: String,
+        date: String,
+        hour: String,
+    },
+    province: String,
+    municipie: String,
+
+    takeToTheLocal: Boolean,
+    takeToTheLocalData: {
+        date: String,
+        hour: String,
+    },
+
+    dontRecognized: Object,
+    user_address: String,
+    userContactData: {
+        name: String,
+        phone: String,
+        email: String,
+    },
+    id: String,
+    status: {
+        type: Schema.Types.ObjectId,
+        ref: 'Status'
+    },
+    budget: Number,
 }, {
     timestamps: true
 });
