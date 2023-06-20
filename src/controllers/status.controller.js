@@ -45,6 +45,7 @@ statusCtrl.updateStatus = async (req, res) => {
                 status: true,
                 message: 'Estado actualizado correctamente'
             });
+            return;
         }
 
         res.status(404).send({
@@ -70,6 +71,8 @@ statusCtrl.deleteStatus = async (req, res) => {
                 status: true,
                 message: 'Estado eliminado correctamente'
             });
+
+            return;
         }
 
         res.status(404).send({

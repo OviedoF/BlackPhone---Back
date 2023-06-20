@@ -25,8 +25,8 @@ const config = multer({
     }
 }).fields([
     {name: 'images', maxCount: 10},
-    {name: 'phone_photos', maxCount: 10},
-    {name: 'fault_photos', maxCount: 10},
+    {name: 'phone_photos', maxCount: 20},
+    {name: 'fault_photos', maxCount: 20},
 ]); 
 
 module.exports = config;

@@ -48,6 +48,7 @@ const OrderSchema = new Schema({
     },
 
     dontRecognized: Object,
+    dontRecognizedNothing: Boolean,
     user_address: String,
     userContactData: {
         name: String,
