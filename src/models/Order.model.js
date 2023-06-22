@@ -60,6 +60,13 @@ const OrderSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'Status'
     },
+    status_history: [{
+        status: {
+            type: Schema.Types.ObjectId,
+            ref: 'Status'
+        },
+        date: String,
+    }],
     budget: Number,
 }, {
     timestamps: true

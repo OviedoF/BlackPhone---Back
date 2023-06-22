@@ -70,6 +70,7 @@ faultsController.updateFault = async (req, res) => {
         const oldFault = await Faults.findById(req.body._id);
         const PricesTableInfoData = await PricesTableInfo.findOne();
         delete req.body._id;
+        console.log(req.body);
 
         if (req.files && req.files.images) {
             const icon = req.files.images[0].filename;

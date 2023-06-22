@@ -25,7 +25,10 @@ const FaultsSchema = new Schema({
     },
     icon: {
         type: String
-    }
+    },
+    description: {
+        type: String
+    },
 }, {
     timestamps: true
 });

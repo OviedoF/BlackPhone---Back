@@ -13,7 +13,7 @@ const orderController = {};
 async function randomNumber() {
     var numero = '';
 
-    for (var i = 0; i < 15; i++) {
+    for (var i = 0; i < 5; i++) {
         numero += Math.floor(Math.random() * 10);
     }
 
@@ -22,7 +22,7 @@ async function randomNumber() {
     while (orderAlreadyExists) {
         numero = '';
 
-        for (var i = 0; i < 15; i++) {
+        for (var i = 0; i < 5; i++) {
             numero += Math.floor(Math.random() * 10);
         }
 
@@ -34,7 +34,13 @@ async function randomNumber() {
 
 orderController.getOrderById = async (req, res) => {
     try {
-        const order = await Order.findOne({ id: req.params.id }).populate('status').populate('faults');
+        const order = await Order.findOne({ id: req.params.id }).populate('status').populate('faults').populate({
+            path: 'status_history',
+            populate: {
+                path: 'status',
+                model: 'Status'
+            }
+        })
 
         if (!order) {
             return res.status(200).send({
@@ -61,7 +67,13 @@ orderController.getUnrecognizedOrders = async (req, res) => {
     try {
         const page = parseInt(req.query.page);
         const limit = parseInt(req.query.limit);
-        const orders = await Order.find({ recognized: false }).populate('status').populate('faults').sort({ createdAt: -1 }).skip((page - 1) * limit).limit(limit);
+        const orders = await Order.find({ recognized: false }).populate('status').populate('faults').populate({
+            path: 'status_history',
+            populate: {
+                path: 'status',
+                model: 'Status'
+            }
+        }).sort({ createdAt: -1 }).skip((page - 1) * limit).limit(limit);
 
         const totalOrders = await Order.countDocuments({ recognized: false });
 
@@ -83,7 +95,13 @@ orderController.getRecognizedOrders = async (req, res) => {
     try {
         const page = parseInt(req.query.page);
         const limit = parseInt(req.query.limit);
-        const orders = await Order.find({ recognized: true }).populate('status').populate('faults').sort({ createdAt: -1 }).skip((page - 1) * limit).limit(limit);
+        const orders = await Order.find({ recognized: true }).populate('status').populate('faults').populate({
+            path: 'status_history',
+            populate: {
+                path: 'status',
+                model: 'Status'
+            }
+        }).sort({ createdAt: -1 }).skip((page - 1) * limit).limit(limit);
 
         return res.status(200).send({
             orders,
@@ -182,7 +200,11 @@ orderController.createOrderDontRecognizedNothing = async (req, res) => {
         const newOrder = new Order({
             ...form,
             id: await randomNumber(),
-            status: initialStatus._id
+            status: initialStatus._id,
+            status_history: [{
+                status: initialStatus._id,
+                date: new Date().getDate() + '/' + (new Date().getMonth() + 1) + '/' + new Date().getFullYear()
+            }]
         });
         await newOrder.save();
 
@@ -261,6 +283,10 @@ orderController.createRecognizedLocalOrder = async (req, res) => {
             status: initialStatus._id,
             province: 'Granada',
             municipie: 'Granada',
+            status_history: [{
+                status: initialStatus._id,
+                date: new Date().getDate() + '/' + (new Date().getMonth() + 1) + '/' + new Date().getFullYear()
+            }]
         });
 
         await newOrder.save();
@@ -357,6 +383,10 @@ orderController.createRecognizedOutsideOrder = async (req, res) => {
             id: await randomNumber(),
             faults,
             status: initialStatus._id,
+            status_history: [{
+                status: initialStatus._id,
+                date: new Date().getDate() + '/' + (new Date().getMonth() + 1) + '/' + new Date().getFullYear()
+            }]
         });
 
         await newOrder.save();
@@ -453,6 +483,10 @@ orderController.createDontListenedItemOrder = async (req, res) => {
             id: await randomNumber(),
             faults,
             status: initialStatus._id,
+            status_history: [{
+                status: initialStatus._id,
+                date: new Date().getDate() + '/' + (new Date().getMonth() + 1) + '/' + new Date().getFullYear()
+            }]
         });
 
         await newOrder.save();
@@ -510,8 +544,16 @@ orderController.editOrderStatus = async (req, res) => {
 
         const statusFinded = await Status.findById(status);
 
+        const order = await Order.findById(id);
+
+        const statusHistory = [...order.status_history, {
+            status: statusFinded._id,
+            date: new Date().getDate() + '/' + (new Date().getMonth() + 1) + '/' + new Date().getFullYear()
+        }]
+
         const orderUpdated = await Order.findByIdAndUpdate(id, {
-            status: statusFinded._id
+            status: statusFinded._id,
+            status_history: statusHistory
         });
 
         await transporter.sendMail({
