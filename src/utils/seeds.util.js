@@ -1,5 +1,6 @@
 const PricesTableInfo = require('../models/PricesTableInfo.model');
 const Province = require('../models/Province.model');
+const PricesRules = require('../models/PricesRules.model');
 const provinces = require('./provinces.json');
 const createInitialStatus = require('./createInitialStatus');
 const createInitialAdmin = require('./createInitialAdmin');
@@ -90,11 +91,26 @@ const setInitialProvinces = async () => {
     console.log('[SEEDER] Provinces seeded! 🌱');
 }
 
+const setInitialPricesRules = async () => {
+    const pricesRulesDocs = await PricesRules.find();
+
+    if (pricesRulesDocs.length > 0) return;
+
+    const pricesRules = new PricesRules({
+        priceWholesalerOutGranada: 0,
+    });
+
+    await pricesRules.save();
+
+    console.log('[SEEDER] PricesRules seeded! 🌱');
+}
+
 const runSeeders = async () => {
     await initialPricesTableInfo();
     await setInitialProvinces();
     await createInitialStatus();
     await createInitialAdmin();
+    await setInitialPricesRules();
 }
 
 module.exports = runSeeders;

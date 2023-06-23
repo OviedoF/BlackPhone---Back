@@ -210,7 +210,7 @@ orderController.createOrderDontRecognizedNothing = async (req, res) => {
 
         return res.status(201).send({
             message: 'Orden creada exitosamente',
-            newOrder,
+            orderId: newOrder.id,
             status: true
         });
     } catch (error) {
@@ -313,6 +313,7 @@ orderController.createRecognizedLocalOrder = async (req, res) => {
 
         return res.status(201).send({
             message: 'Orden creada exitosamente',
+            orderId: newOrder.id,
             status: true
         });
     } catch (error) {
@@ -413,6 +414,7 @@ orderController.createRecognizedOutsideOrder = async (req, res) => {
 
         return res.status(201).send({
             message: 'Orden creada exitosamente',
+            orderId: newOrder.id,
             status: true
         });
     } catch (error) {
@@ -513,6 +515,7 @@ orderController.createDontListenedItemOrder = async (req, res) => {
 
         return res.status(201).send({
             message: 'Orden creada exitosamente',
+            orderId: newOrder.id,
             status: true
         });
     } catch (error) {
