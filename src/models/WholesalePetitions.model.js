@@ -13,6 +13,12 @@ const WholesalePetitionsSchema = Schema({
         type: String,
         required: [true, 'Email is required']
     },
+    contact: {
+        type: String
+    },
+    landline: {
+        type: String
+    },
     address: {
         type: String,
         required: [true, 'Address is required']

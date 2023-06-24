@@ -23,17 +23,18 @@ const wholesaleRequestSchema = new Schema({
         required: true
     },
     date: {
-        type: String,
-        required: true
+        type: String
     },
     hour: {
-        type: String,
-        required: true
+        type: String
     },
     request: {
         type: String,
         required: true
-    }
+    },
+    takeToTheLocal: {
+        type: Boolean
+    },
 });
 
 module.exports = model('WholesaleRequest', wholesaleRequestSchema);

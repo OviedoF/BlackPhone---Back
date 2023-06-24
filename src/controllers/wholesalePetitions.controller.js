@@ -253,10 +253,21 @@ WholesalePetitionsController.createPricesPdf = async(req, res) => {
             message: 'Acceso de mayorista no encontrada'
         });
 
-        const prices = await Prices.find().populate('brand');
+        //pricer order alphabetically
+        const prices = await Prices.find().populate('brand').sort({brand: 1});
         const faults = await Faults.find();
         const wholesalerFaults = faults.filter(fault => fault.idArea === 'wholesale');
-        console.log(wholesalerFaults)
+        
+
+        // order prices by brand and model alphabetically ignoring uppercase
+
+        prices.sort((a, b) => {
+            if(a.brand.name.toLowerCase() > b.brand.name.toLowerCase()) return 1;
+            if(a.brand.name.toLowerCase() < b.brand.name.toLowerCase()) return -1;
+            if(a.model > b.model) return 1;
+            if(a.model < b.model) return -1;
+            return 0;
+        });
 
         await pdfsMaker.createPricesPdf({
             name: wholesalePetition.name,
