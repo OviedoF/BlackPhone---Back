@@ -4,8 +4,7 @@ const pricesRulesController = {};
 
 pricesRulesController.getPricesRules = async (req, res) => {
     try {
-        const pricesRulesDoc = await PricesRules.findOne();
-        const pricesRules = pricesRulesDoc ? pricesRulesDoc.pricesRules : [];
+        const pricesRules = await PricesRules.findOne();
 
         res.status(200).send({ 
             status: true,
@@ -22,8 +21,8 @@ pricesRulesController.getPricesRules = async (req, res) => {
 
 pricesRulesController.editPricesRules = async (req, res) => {
     try {
-        const { pricesRules } = req.body;    
-        const pricesRulesDoc = await PricesRules.findOneAndUpdate({}, { pricesRules }, { new: true });
+        const { pricesRules } = req.body;
+        const pricesRulesDoc = await PricesRules.findOneAndUpdate({}, pricesRules, { new: true });
 
         res.status(200).json({ 
             status: true,
