@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const WholesalePetitionsController = require('../controllers/WholesalePetitions.controller');
+const WholesalePetitionsController = require('../controllers/wholesalePetitions.controller');
 
 router.get('/pdf/:id', WholesalePetitionsController.createPricesPdf);
 router.get('/pdf-outside/:id', WholesalePetitionsController.createPricesOutsidePdf);
