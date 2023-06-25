@@ -35,6 +35,25 @@ const wholesaleRequestSchema = new Schema({
     takeToTheLocal: {
         type: Boolean
     },
+    id:{
+        type: String,
+        required: true,
+        unique: true
+    },
+    status: {
+        type: Schema.Types.ObjectId,
+        ref: 'Status',
+        required: true
+    },
+    status_history: [{
+        status: {
+            type: Schema.Types.ObjectId,
+            ref: 'Status'
+        },
+        date: {
+            type: String,
+        }
+    }],
 });
 
 module.exports = model('WholesaleRequest', wholesaleRequestSchema);

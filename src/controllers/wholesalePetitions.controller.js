@@ -6,7 +6,6 @@ const Prices = require('../models/Prices.model');
 const Faults = require('../models/Faults.model');
 const PricesRules = require('../models/PricesRules.model');
 const pdfsMaker = require('../utils/WholesalersPdfsMaker');
-const path = require('path');
 
 const WholesalePetitionsController = {}
 

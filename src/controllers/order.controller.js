@@ -9,6 +9,7 @@ const { recognizedLocalEmails, recognizedLocalEmailAdmin, recognizedOutsideEmail
 const { requirePresupuestEmailUser, requirePresupuestEmailAdmin } = require('../utils/RequirePresupuestEmail');
 const ChangeStatusEmail = require('../utils/ChangeStatusEmail');
 const orderController = {};
+const WholesaleRequest = require('../models/WholesaleRequest.model');
 
 async function randomNumber() {
     var numero = '';
@@ -19,7 +20,9 @@ async function randomNumber() {
 
     let orderAlreadyExists = await Order.findOne({ id: numero });
 
-    while (orderAlreadyExists) {
+    let wholesaleAlreadyExists = await WholesaleRequest.findOne({ id: numero });
+
+    while (orderAlreadyExists || wholesaleAlreadyExists) {
         numero = '';
 
         for (var i = 0; i < 5; i++) {
