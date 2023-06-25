@@ -5,3 +5,4 @@ src/public/api/files
 src/public/api/images
 src/public/api/uploads
 src/public/api/invoices
+src/public/api/documents
