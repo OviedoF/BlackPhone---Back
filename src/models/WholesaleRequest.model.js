@@ -54,6 +54,8 @@ const wholesaleRequestSchema = new Schema({
             type: String,
         }
     }],
+}, {
+    timestamps: true
 });
 
 module.exports = model('WholesaleRequest', wholesaleRequestSchema);

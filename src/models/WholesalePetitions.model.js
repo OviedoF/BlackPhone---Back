@@ -39,6 +39,8 @@ const WholesalePetitionsSchema = Schema({
         type: Boolean,
         default: false
     }
+}, {
+    timestamps: true
 });
 
 WholesalePetitionsSchema.methods.toJSON = function() {

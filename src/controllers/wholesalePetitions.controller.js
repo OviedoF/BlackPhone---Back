@@ -9,7 +9,7 @@ const pdfsMaker = require('../utils/WholesalersPdfsMaker');
 
 const WholesalePetitionsController = {}
 
-WholesalePetitionsController.getWholesalePetitions = async(req, res) => {
+WholesalePetitionsController.getWholesalePetitions = async (req, res) => {
     try {
         const wholesalePetitions = await WholesalePetitions.find();
         res.status(200).json({
@@ -25,9 +25,9 @@ WholesalePetitionsController.getWholesalePetitions = async(req, res) => {
     }
 }
 
-WholesalePetitionsController.getWholesalePetition = async(req, res) => {
+WholesalePetitionsController.getWholesalePetition = async (req, res) => {
     try {
-        const {id} = req.params;
+        const { id } = req.params;
         const wholesalePetition = await WholesalePetitions.findById(id);
         res.status(200).json({
             status: true,
@@ -43,7 +43,7 @@ WholesalePetitionsController.getWholesalePetition = async(req, res) => {
     }
 }
 
-WholesalePetitionsController.createWholesalePetition = async(req, res) => {
+WholesalePetitionsController.createWholesalePetition = async (req, res) => {
     try {
         const transporter = await nodemailer.createTransport({
             host: process.env.MAIL_HOST,
@@ -58,11 +58,11 @@ WholesalePetitionsController.createWholesalePetition = async(req, res) => {
             }
         });
 
-        if(req.files && req.files.images) {
-            const {images} = req.files;
-           
+        if (req.files && req.files.images) {
+            const { images } = req.files;
+
             const url = `${process.env.BASE_URL}/uploads/${images[0].filename}`;
-           
+
             req.body.authentification = url;
         }
 
@@ -141,13 +141,13 @@ WholesalePetitionsController.createWholesalePetition = async(req, res) => {
     }
 }
 
-WholesalePetitionsController.approve = async(req, res) => {
+WholesalePetitionsController.approve = async (req, res) => {
     try {
-        const {id} = req.params;
+        const { id } = req.params;
 
         const wholesalePetition = await WholesalePetitions.findById(id);
 
-        if(!wholesalePetition) return res.status(404).json({
+        if (!wholesalePetition) return res.status(404).json({
             status: false,
             message: 'Petición de mayorista no encontrada'
         });
@@ -195,13 +195,13 @@ WholesalePetitionsController.approve = async(req, res) => {
     }
 }
 
-WholesalePetitionsController.reject = async(req, res) => {
+WholesalePetitionsController.reject = async (req, res) => {
     try {
-        const {id} = req.params;
+        const { id } = req.params;
 
         const wholesalePetition = await WholesalePetitions.findById(id);
 
-        if(!wholesalePetition) return res.status(404).json({
+        if (!wholesalePetition) return res.status(404).json({
             status: false,
             message: 'Acceso de mayorista no encontrada'
         });
@@ -224,9 +224,9 @@ WholesalePetitionsController.reject = async(req, res) => {
     }
 }
 
-WholesalePetitionsController.deleteWholesalePetition = async(req, res) => {
+WholesalePetitionsController.deleteWholesalePetition = async (req, res) => {
     try {
-        const {id} = req.params;
+        const { id } = req.params;
         const wholesalePetition = await WholesalePetitions.findByIdAndDelete(id);
         res.status(200).json({
             status: true,
@@ -241,30 +241,30 @@ WholesalePetitionsController.deleteWholesalePetition = async(req, res) => {
     }
 }
 
-WholesalePetitionsController.createPricesPdf = async(req, res) => {
+WholesalePetitionsController.createPricesPdf = async (req, res) => {
     try {
-        const {id} = req.params;
+        const { id } = req.params;
 
         const wholesalePetition = await WholesalePetitions.findById(id);
 
-        if(!wholesalePetition) return res.status(404).json({
+        if (!wholesalePetition) return res.status(404).json({
             status: false,
             message: 'Acceso de mayorista no encontrada'
         });
 
         //pricer order alphabetically
-        const prices = await Prices.find().populate('brand').sort({brand: 1});
+        const prices = await Prices.find().populate('brand').sort({ brand: 1 });
         const faults = await Faults.find();
         const wholesalerFaults = faults.filter(fault => fault.idArea === 'wholesale');
-        
+
 
         // order prices by brand and model alphabetically ignoring uppercase
 
         prices.sort((a, b) => {
-            if(a.brand.name.toLowerCase() > b.brand.name.toLowerCase()) return 1;
-            if(a.brand.name.toLowerCase() < b.brand.name.toLowerCase()) return -1;
-            if(a.model > b.model) return 1;
-            if(a.model < b.model) return -1;
+            if (a.brand.name.toLowerCase() > b.brand.name.toLowerCase()) return 1;
+            if (a.brand.name.toLowerCase() < b.brand.name.toLowerCase()) return -1;
+            if (a.model > b.model) return 1;
+            if (a.model < b.model) return -1;
             return 0;
         });
 
@@ -288,13 +288,13 @@ WholesalePetitionsController.createPricesPdf = async(req, res) => {
     }
 }
 
-WholesalePetitionsController.createPricesOutsidePdf = async(req, res) => {
+WholesalePetitionsController.createPricesOutsidePdf = async (req, res) => {
     try {
-        const {id} = req.params;
+        const { id } = req.params;
 
         const wholesalePetition = await WholesalePetitions.findById(id);
 
-        if(!wholesalePetition) return res.status(404).json({
+        if (!wholesalePetition) return res.status(404).json({
             status: false,
             message: 'Acceso de mayorista no encontrada'
         });
@@ -304,6 +304,16 @@ WholesalePetitionsController.createPricesOutsidePdf = async(req, res) => {
         const prices = await Prices.find().populate('brand');
         const faults = await Faults.find();
         const wholesalerFaults = faults.filter(fault => fault.idArea === 'wholesale');
+
+        // order prices by brand and model alphabetically ignoring uppercase
+
+        prices.sort((a, b) => {
+            if (a.brand.name.toLowerCase() > b.brand.name.toLowerCase()) return 1;
+            if (a.brand.name.toLowerCase() < b.brand.name.toLowerCase()) return -1;
+            if (a.model > b.model) return 1;
+            if (a.model < b.model) return -1;
+            return 0;
+        });
 
         await pdfsMaker.createPricesOutsidePdf({
             name: wholesalePetition.name,
@@ -326,7 +336,7 @@ WholesalePetitionsController.createPricesOutsidePdf = async(req, res) => {
     }
 }
 
-WholesalePetitionsController.downloadPricesPdf = async(req, res) => {
+WholesalePetitionsController.downloadPricesPdf = async (req, res) => {
     try {
         const path = `${__dirname}/../public/api/documents/precios_mayorista.pdf`;
 
