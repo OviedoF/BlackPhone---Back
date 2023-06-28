@@ -1,4 +1,4 @@
-const WebTexts = require('../models/webTexts.model');
+const WebTexts = require('../models/WebTexts.model');
 require('dotenv').config();
 const lodash = require('lodash');
 
