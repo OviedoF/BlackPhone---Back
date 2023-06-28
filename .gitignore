@@ -5,8 +5,4 @@ src/public/api/files
 src/public/api/images
 src/public/api/uploads
 src/public/api/invoices
-<<<<<<< HEAD
 src/public/api/documents
-=======
-src/public/api/documents
->>>>>>> 0e47111 (pdf)
