@@ -42,7 +42,12 @@ pricesTableController.getPrices = async (req, res) => {
 pricesTableController.createPrice = async (req, res) => {
     try {
         const data = JSON.parse(req.body.data);
-        const price = new Prices(data);
+        const price = new Prices({
+            ...data,
+            prices: {
+                modifiedAt: new Date().toLocaleDateString(),
+            }
+        });
 
         await price.save();
 
