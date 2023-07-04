@@ -6,7 +6,12 @@ const PricesSchema = new Schema({
         ref: 'Brand'
     },
     model: String,
-    prices: Object
+    prices: {
+        type: Object,
+        default: {
+            modifiedAt: new Date().toLocaleDateString(),
+        }
+    }
 }, {
     timestamps: true
 });
