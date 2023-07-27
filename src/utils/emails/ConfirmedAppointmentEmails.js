@@ -13,7 +13,7 @@ const confirmedAppointmentEmailUser = async (order) => {
             </div>
 
             <p style="text-align: center;font-size: 1.2rem; padding: 20px;">
-                ¡Hola! Gracias por confiar en nosotros para revivir tu celular. ¡En Empetel nos encargaremos de que tu celular quede como nuevo! 
+                ¡Hola! Gracias por confiar en nosotros para revivir tu terminal. ¡En Empetel nos encargaremos de que tu terminal quede como nuevo! 
             </p>
 
             <p style="text-align: center;font-size: 1.5rem; padding: 20px;">

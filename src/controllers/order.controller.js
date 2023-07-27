@@ -136,7 +136,9 @@ orderController.createOrderDontRecognizedNothing = async (req, res) => {
         const transporter = await nodemailer.createTransport({
             host: process.env.MAIL_HOST,
             port: process.env.MAIL_PORT,
-            secure: true,
+            secure: false, 
+  tls: {
+    ciphers: 'SSLv3' },
             auth: {
                 user: process.env.MAIL_USERNAME,
                 pass: process.env.MAIL_PASSWORD
@@ -243,7 +245,9 @@ orderController.createRecognizedLocalOrder = async (req, res) => {
         const transporter = await nodemailer.createTransport({
             host: process.env.MAIL_HOST,
             port: process.env.MAIL_PORT,
-            secure: true,
+            secure: false, 
+  tls: {
+    ciphers: 'SSLv3' },
             auth: {
                 user: process.env.MAIL_USERNAME,
                 pass: process.env.MAIL_PASSWORD
@@ -378,7 +382,9 @@ orderController.createRecognizedOutsideOrder = async (req, res) => {
         const transporter = await nodemailer.createTransport({
             host: process.env.MAIL_HOST,
             port: process.env.MAIL_PORT,
-            secure: true,
+            secure: false, 
+  tls: {
+    ciphers: 'SSLv3' },
             auth: {
                 user: process.env.MAIL_USERNAME,
                 pass: process.env.MAIL_PASSWORD
@@ -480,7 +486,9 @@ orderController.createDontListenedItemOrder = async (req, res) => {
         const transporter = await nodemailer.createTransport({
             host: process.env.MAIL_HOST,
             port: process.env.MAIL_PORT,
-            secure: true,
+            secure: false, 
+  tls: {
+    ciphers: 'SSLv3' },
             auth: {
                 user: process.env.MAIL_USERNAME,
                 pass: process.env.MAIL_PASSWORD
@@ -573,7 +581,9 @@ orderController.editOrderStatus = async (req, res) => {
         const transporter = await nodemailer.createTransport({
             host: process.env.MAIL_HOST,
             port: process.env.MAIL_PORT,
-            secure: true,
+            secure: false, 
+  tls: {
+    ciphers: 'SSLv3' },
             auth: {
                 user: process.env.MAIL_USERNAME,
                 pass: process.env.MAIL_PASSWORD
