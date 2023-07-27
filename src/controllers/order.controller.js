@@ -426,6 +426,7 @@ orderController.createRecognizedOutsideOrder = async (req, res) => {
                 date: new Date().getDate() + '/' + (new Date().getMonth() + 1) + '/' + new Date().getFullYear()
             }]
         });
+        console.log(newOrder)
 
         await newOrder.save();
 

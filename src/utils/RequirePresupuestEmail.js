@@ -14,6 +14,13 @@ style = "display: flex; align-items: center; justify-content: center; flex-direc
             </div>
 
             <p style="text-align: center;font-size: 1.2rem; padding: 20px;">
+                Puedes seguir tu pedido en el siguiente link: 
+                <a href="https://citamovil.es/seguir-mi-reparacion" target="_blank">
+                https://citamovil.es/seguir-mi-reparacion
+                </a>
+            </p>
+
+            <p style="text-align: center;font-size: 1.2rem; padding: 20px;">
                 ¡Hola ${order.name}! Gracias por confiar en nosotros, en breve nos pondremos en contacto contigo para brindarte un presupuesto.
             </p>
 

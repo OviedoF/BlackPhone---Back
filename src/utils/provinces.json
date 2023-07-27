@@ -137,20 +137,12 @@
 	"label": "Palencia",
 	"cost": "100"
 }, {
-	"value": "35",
-	"label": "Palmas, Las",
-	"cost": "100"
-}, {
 	"value": "36",
 	"label": "Pontevedra",
 	"cost": "100"
 }, {
 	"value": "37",
 	"label": "Salamanca",
-	"cost": "100"
-}, {
-	"value": "38",
-	"label": "Santa Cruz de Tenerife",
 	"cost": "100"
 }, {
 	"value": "39",
@@ -199,13 +191,5 @@
 }, {
 	"value": "50",
 	"label": "Zaragoza",
-	"cost": "100"
-}, {
-	"value": "51",
-	"label": "Ceuta",
-	"cost": "100"
-}, {
-	"value": "52",
-	"label": "Melilla",
 	"cost": "100"
 }]

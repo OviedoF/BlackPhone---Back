@@ -37,6 +37,7 @@ const OrderSchema = new Schema({
         address: String,
         date: String,
         hour: String,
+        additionalInfo: String,
     },
     province: String,
     municipie: String,

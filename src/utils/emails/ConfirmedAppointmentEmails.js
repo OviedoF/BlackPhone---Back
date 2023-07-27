@@ -23,6 +23,13 @@ const confirmedAppointmentEmailUser = async (order) => {
             <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d794.7610950312712!2d-3.6081294303941718!3d37.175416266836955!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd71fc93778e5937%3A0x68fedc42074a5175!2sEmpetel.%20Cl%C3%ADnica%20del%20m%C3%B3vil!5e0!3m2!1ses-419!2sar!4v1690404006545!5m2!1ses-419!2sar" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
 
             <p style="text-align: center;font-size: 1.2rem; padding: 20px;">
+                Puedes seguir tu pedido en el siguiente link: 
+                <a href="https://citamovil.es/seguir-mi-reparacion" target="_blank">
+                https://citamovil.es/seguir-mi-reparacion
+                </a>
+            </p>
+
+            <p style="text-align: center;font-size: 1.2rem; padding: 20px;">
                 Con el siguiente código podrás hacer el seguimiento de tu pedido: 
             </p>
 
@@ -174,6 +181,13 @@ style = "display: flex; align-items: center; justify-content: center; flex-direc
 
             <p style="text-align: center;font-size: 1.5rem; padding: 20px;">
                 Cita confirmada para el día: ${order.date}, a las: ${order.hour}. Precio final: €${order.budget.toFixed(2)}
+            </p>
+
+            <p style="text-align: center;font-size: 1.2rem; padding: 20px;">
+                Puedes seguir tu pedido en el siguiente link: 
+                <a href="https://citamovil.es/seguir-mi-reparacion" target="_blank">
+                https://citamovil.es/seguir-mi-reparacion
+                </a>
             </p>
 
             <p style="text-align: center;font-size: 1.2rem; padding: 20px;">

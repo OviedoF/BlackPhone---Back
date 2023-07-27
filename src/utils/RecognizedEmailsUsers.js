@@ -17,7 +17,14 @@ const recognizedLocalEmails = async (order) => {
             </p>
 
             <p style="text-align: center;font-size: 1.2rem; padding: 20px;">
-                Con el siguiente código podrás hacer el seguimiento de tu pedido: 
+                Puedes seguir tu pedido en el siguiente link: 
+                <a href="https://citamovil.es/seguir-mi-reparacion" target="_blank">
+                https://citamovil.es/seguir-mi-reparacion
+                </a>
+            </p>
+
+            <p style="text-align: center;font-size: 1.2rem; padding: 20px;">
+                Y usa el siguiente código para hacer el seguimiento de tu pedido: 
             </p>
 
             <h2 style="text-align: center; font-size: 2rem; padding: 20px;">${order.id}</h2>
@@ -62,11 +69,11 @@ const recognizedLocalEmails = async (order) => {
                         <th style="text-align: center; padding: 10px;border-bottom: 1px solid #292929;height: 50px;">Averías:</th>
                         <th style="text-align: center; padding: 10px;border-bottom: 1px solid #292929;height: 50px;">
                         ${order.faults.length > 0 && order.faults.map((fault, index) => {
-                            if (index === order.faults.length - 1) {
-                                return fault
-                            }
-                            return fault + ' - '
-                        })}
+        if (index === order.faults.length - 1) {
+            return fault
+        }
+        return fault + ' - '
+    })}
                         </th>
                     </tr>
 
@@ -76,11 +83,11 @@ const recognizedLocalEmails = async (order) => {
                     </tr>` : ''}
 
                     ${order.additionalCosts.length > 0 && order.additionalCosts.map(additionalCost => {
-                        return `<tr style="border: 1px solid #292929;">
+        return `<tr style="border: 1px solid #292929;">
                                             <th style="text-align: center; padding: 10px;border-bottom: 1px solid #292929;height: 50px;">Costo adicional: ${additionalCost.name}</th>
                                             <th style="text-align: center; padding: 10px;border-bottom: 1px solid #292929;height: 50px;">${additionalCost.cost}</th>
                                         </tr>`
-                    })}
+    })}
 
                     <tr style="border: 1px solid #292929;">
                         <th style="text-align: center; padding: 10px;border-bottom: 1px solid #292929;height: 50px;">Costo total:</th>
@@ -167,6 +174,13 @@ style = "display: flex; align-items: center; justify-content: center; flex-direc
             </p>
 
             <p style="text-align: center;font-size: 1.2rem; padding: 20px;">
+                Puedes seguir tu pedido en el siguiente link: 
+                <a href="https://citamovil.es/seguir-mi-reparacion" target="_blank">
+                https://citamovil.es/seguir-mi-reparacion
+                </a>
+            </p>
+
+            <p style="text-align: center;font-size: 1.2rem; padding: 20px;">
                 Código del pedido:
             </p>
 
@@ -217,11 +231,11 @@ style = "display: flex; align-items: center; justify-content: center; flex-direc
                     <th style="text-align: center; padding: 10px;border-bottom: 1px solid #292929;height: 50px;">Averías:</th>
                     <th style="text-align: center; padding: 10px;border-bottom: 1px solid #292929;height: 50px;">
                     ${order.faults.length > 0 && order.faults.map((fault, index) => {
-                        if (index === order.faults.length - 1) {
-                            return fault
-                        }
-                        return fault + ' - '
-                    })}
+        if (index === order.faults.length - 1) {
+            return fault
+        }
+        return fault + ' - '
+    })}
                     </th>
                 </tr>
 
@@ -231,11 +245,11 @@ style = "display: flex; align-items: center; justify-content: center; flex-direc
                 </tr>` : ''}
 
                 ${order.additionalCosts.length > 0 && order.additionalCosts.map(additionalCost => {
-                    return `<tr style="border: 1px solid #292929;">
+        return `<tr style="border: 1px solid #292929;">
                                         <th style="text-align: center; padding: 10px;border-bottom: 1px solid #292929;height: 50px;">Costo adicional: ${additionalCost.name}</th>
                                         <th style="text-align: center; padding: 10px;border-bottom: 1px solid #292929;height: 50px;">${additionalCost.cost}</th>
                                     </tr>`
-                })}
+    })}
 
                 <tr style="border: 1px solid #292929;">
                     <th style="text-align: center; padding: 10px;border-bottom: 1px solid #292929;height: 50px;">Costo total:</th>
@@ -322,7 +336,14 @@ const recognizedOutsideEmails = async (order) => {
             </p>
 
             <p style="text-align: center;font-size: 1.2rem; padding: 20px;">
-                Con el siguiente código podrás hacer el seguimiento de tu pedido: 
+                Puedes seguir tu pedido en el siguiente link: 
+                <a href="https://citamovil.es/seguir-mi-reparacion" target="_blank">
+                https://citamovil.es/seguir-mi-reparacion
+                </a>
+            </p>
+
+            <p style="text-align: center;font-size: 1.2rem; padding: 20px;">
+                Y usa el siguiente código para hacer el seguimiento de tu pedido: 
             </p>
 
             <h2 style="text-align: center; font-size: 2rem; padding: 20px;">${order.id}</h2>
@@ -367,11 +388,11 @@ const recognizedOutsideEmails = async (order) => {
                         <th style="text-align: center; padding: 10px;border-bottom: 1px solid #292929;height: 50px;">Averías:</th>
                         <th style="text-align: center; padding: 10px;border-bottom: 1px solid #292929;height: 50px;">
                         ${order.faults.length > 0 && order.faults.map((fault, index) => {
-                            if (index === order.faults.length - 1) {
-                                return fault
-                            }
-                            return fault + ' - '
-                        })}
+                        if (index === order.faults.length - 1) {
+                            return fault
+                        }
+                        return fault + ' - '
+                    })}
                         </th>
                     </tr>
 
@@ -381,11 +402,11 @@ const recognizedOutsideEmails = async (order) => {
                     </tr>` : ''}
 
                     ${order.additionalCosts.length > 0 && order.additionalCosts.map(additionalCost => {
-                        return `<tr style="border: 1px solid #292929;">
+        return `<tr style="border: 1px solid #292929;">
                                             <th style="text-align: center; padding: 10px;border-bottom: 1px solid #292929;height: 50px;">Costo adicional: ${additionalCost.name}</th>
                                             <th style="text-align: center; padding: 10px;border-bottom: 1px solid #292929;height: 50px;">${additionalCost.cost}</th>
                                         </tr>`
-                    })}
+    })}
 
                     <tr style="border: 1px solid #292929;">
                         <th style="text-align: center; padding: 10px;border-bottom: 1px solid #292929;height: 50px;">Costo total:</th>
@@ -414,10 +435,15 @@ const recognizedOutsideEmails = async (order) => {
                             <th style="text-align: center; padding: 10px;border-bottom: 1px solid #292929;height: 50px;">${order.goToTheHomeData.address}</th>
                         </tr>` : ''}
                     
-                    ${Object.keys(order.takeToTheLocalData).length === 0 ? `<tr style="border: 1px solid #292929;">
-                            <th style="text-align: center; padding: 10px;border-bottom: 1px solid #292929;height: 50px;">Hora:</th>
-                            <th style="text-align: center; padding: 10px;border-bottom: 1px solid #292929;height: 50px;">${order.goToTheHomeData.hour}</th>
-                        </tr>` : ''}
+                    ${Object.keys(order.takeToTheLocalData).length === 0 ? order.goToTheHomeData.additionalInfo ? `<tr style="border: 1px solid #292929;">
+                        <th style="text-align: center; padding: 10px;border-bottom: 1px solid #292929;height: 50px;">Información adicional:</th>
+                         <th style="text-align: center; padding: 10px;border-bottom: 1px solid #292929;height: 50px;">${order.goToTheHomeData.additionalInfo}</th>
+                     </tr>` : '' : ''}
+                    
+                     ${Object.keys(order.takeToTheLocalData).length === 0 ? `<tr style="border: 1px solid #292929;">
+                        <th style="text-align: center; padding: 10px;border-bottom: 1px solid #292929;height: 50px;">Hora:</th>
+                        <th style="text-align: center; padding: 10px;border-bottom: 1px solid #292929;height: 50px;">${order.goToTheHomeData.hour || "-"}</th>
+                    </tr>` : ''}
 
                     ${(Object.keys(order.takeToTheLocalData).length === 0 && order.goToTheHomeData.date) ? `<tr style="border: 1px solid #292929;">
                             <th style="text-align: center; padding: 10px;border-bottom: 1px solid #292929;height: 50px;">Fecha:</th>
@@ -477,6 +503,13 @@ style = "display: flex; align-items: center; justify-content: center; flex-direc
             </p>
 
             <p style="text-align: center;font-size: 1.2rem; padding: 20px;">
+                Puedes seguir tu pedido en el siguiente link: 
+                <a href="https://citamovil.es/seguir-mi-reparacion" target="_blank">
+                https://citamovil.es/seguir-mi-reparacion
+                </a>
+            </p>
+
+            <p style="text-align: center;font-size: 1.2rem; padding: 20px;">
                 Código del pedido:
             </p>
 
@@ -527,11 +560,11 @@ style = "display: flex; align-items: center; justify-content: center; flex-direc
                     <th style="text-align: center; padding: 10px;border-bottom: 1px solid #292929;height: 50px;">Averías:</th>
                     <th style="text-align: center; padding: 10px;border-bottom: 1px solid #292929;height: 50px;">
                     ${order.faults.length > 0 && order.faults.map((fault, index) => {
-                        if (index === order.faults.length - 1) {
-                            return fault
-                        }
-                        return fault + ' - '
-                    })}
+        if (index === order.faults.length - 1) {
+            return fault
+        }
+        return fault + ' - '
+    })}
                     </th>
                 </tr>
 
@@ -542,14 +575,14 @@ style = "display: flex; align-items: center; justify-content: center; flex-direc
 
                 ${order.additionalCosts.length > 0 && order.additionalCosts.map(additionalCost => {
                     return `<tr style="border: 1px solid #292929;">
-                                        <th style="text-align: center; padding: 10px;border-bottom: 1px solid #292929;height: 50px;">Costo adicional: ${additionalCost.name}</th>
-                                        <th style="text-align: center; padding: 10px;border-bottom: 1px solid #292929;height: 50px;">${additionalCost.cost}</th>
-                                    </tr>`
+                                <th style="text-align: center; padding: 10px;border-bottom: 1px solid #292929;height: 50px;">Costo adicional: ${additionalCost.name}</th>
+                                <th style="text-align: center; padding: 10px;border-bottom: 1px solid #292929;height: 50px;">${additionalCost.cost}</th>
+                    </tr>`
                 })}
 
                 <tr style="border: 1px solid #292929;">
                     <th style="text-align: center; padding: 10px;border-bottom: 1px solid #292929;height: 50px;">Costo total:</th>
-                    <th style="text-align: center; padding: 10px;border-bottom: 1px solid #292929;height: 50px;">${order.budget}</th>
+                    <th style="text-align: center; padding: 10px;border-bottom: 1px solid #292929;height: 50px;">€${parseFloat(order.budget).toFixed(2)}</th>
                 </tr>
 
                 <tr style="border: 1px solid #292929;">
@@ -573,10 +606,15 @@ style = "display: flex; align-items: center; justify-content: center; flex-direc
                        <th style="text-align: center; padding: 10px;border-bottom: 1px solid #292929;height: 50px;">Dirección:</th>
                         <th style="text-align: center; padding: 10px;border-bottom: 1px solid #292929;height: 50px;">${order.goToTheHomeData.address}</th>
                     </tr>` : ''}
+
+                ${Object.keys(order.takeToTheLocalData).length === 0 ? order.goToTheHomeData.additionalInfo ? `<tr style="border: 1px solid #292929;">
+                    <th style="text-align: center; padding: 10px;border-bottom: 1px solid #292929;height: 50px;">Información adicional:</th>
+                     <th style="text-align: center; padding: 10px;border-bottom: 1px solid #292929;height: 50px;">${order.goToTheHomeData.additionalInfo}</th>
+                 </tr>` : '' : ''}
                 
                 ${Object.keys(order.takeToTheLocalData).length === 0 ? `<tr style="border: 1px solid #292929;">
                         <th style="text-align: center; padding: 10px;border-bottom: 1px solid #292929;height: 50px;">Hora:</th>
-                        <th style="text-align: center; padding: 10px;border-bottom: 1px solid #292929;height: 50px;">${order.goToTheHomeData.hour}</th>
+                        <th style="text-align: center; padding: 10px;border-bottom: 1px solid #292929;height: 50px;">${order.goToTheHomeData.hour || "-"}</th>
                     </tr>` : ''}
 
                 ${(Object.keys(order.takeToTheLocalData).length === 0 && order.goToTheHomeData.date) ? `<tr style="border: 1px solid #292929;">
