@@ -1,5 +1,6 @@
 const PricesTableInfo = require('../models/PricesTableInfo.model');
 const Prices = require('../models/Prices.model');
+const Faults = require('../models/Faults.model');
 const pricesTableController = {};
 
 pricesTableController.getPricesTableInfo = async (req, res) => {
@@ -157,10 +158,10 @@ pricesTableController.getMainFormData = async (req, res) => {
 pricesTableController.calculateBudget = async (req, res) => {
     try {
         const form = req.body.form;
-        console.log(form);
         const prices = await Prices.find().sort({ createdAt: -1 });
         let area = form.isLocal ? 'local' : 'outside';
         let price = 0;
+        const faultsWithPrice = [];
 
         const priceItem = prices.find(price => price.brand.toString() == form.brand.value && price.model == form.model.value);
 
@@ -172,14 +173,24 @@ pricesTableController.calculateBudget = async (req, res) => {
         });
 
         form.faults.forEach(fault => {
-            console.log(fault);
             price += parseInt(priceItem.prices[`${fault}${area}`]);
         });
 
-        console.log(price);
+        for (let fault of form.faults) {
+            let costOfFault = parseInt(priceItem.prices[`${fault}${area}`]);
+            const {publicName} = await Faults.findOne({
+                id: fault
+            })
+
+            faultsWithPrice.push({
+                fault: publicName,
+                cost: costOfFault
+            });
+        }
 
         return res.status(200).send({
-            price,
+            total: price,
+            faultsWithPrice,
             message: 'Obtenidos correctamente!',
             status: true,
             code: 200,

@@ -10,6 +10,7 @@ const { requirePresupuestEmailUser, requirePresupuestEmailAdmin } = require('../
 const ChangeStatusEmail = require('../utils/ChangeStatusEmail');
 const orderController = {};
 const WholesaleRequest = require('../models/WholesaleRequest.model');
+const { confirmedAppointmentEmailUser, confrmedAppointmentEmailAdmin } = require('../utils/emails/ConfirmedAppointmentEmails');
 
 async function randomNumber() {
     var numero = '';
@@ -228,6 +229,7 @@ orderController.createOrderDontRecognizedNothing = async (req, res) => {
 orderController.createRecognizedLocalOrder = async (req, res) => {
     try {
         const body = JSON.parse(req.body.form);
+        console.log(body)
 
         const initialStatus = await Status.findOne({ initial: true });
 
@@ -294,25 +296,57 @@ orderController.createRecognizedLocalOrder = async (req, res) => {
 
         await newOrder.save();
 
-        await transporter.sendMail({
-            from: `'Empetel' <${process.env.MAIL_USERNAME}>`,
-            to: body.email,
-            subject: '¡Hemos recibido tu pedido!',
-            html: await recognizedLocalEmails({
-                ...newOrder._doc,
-                faults: faultsNames,
-            })
-        });
+        console.log(newOrder)
 
-        await transporter.sendMail({
-            from: `'Empetel' <${process.env.MAIL_USERNAME}>`,
-            to: process.env.OWNER_EMAIL,
-            subject: '¡Has recibido un nuevo pedido en Granada Capital!',
-            html: await recognizedLocalEmailAdmin({
-                ...newOrder._doc,
-                faults: faultsNames,
-            })
-        });
+        if(!newOrder.takeToTheLocal) {
+            await transporter.sendMail({
+                from: `'Empetel' <${process.env.MAIL_USERNAME}>`,
+                to: body.email,
+                subject: '¡Hemos recibido tu pedido!',
+                html: await recognizedLocalEmails({
+                    ...newOrder._doc,
+                    faults: faultsNames,
+                })
+            });
+
+            await transporter.sendMail({
+                from: `'Empetel' <${process.env.MAIL_USERNAME}>`,
+                to: process.env.OWNER_EMAIL,
+                subject: '¡Has recibido un nuevo pedido en Granada Capital!',
+                html: await recognizedLocalEmailAdmin({
+                    ...newOrder._doc,
+                    faults: faultsNames,
+                })
+            });
+        }
+
+        if(newOrder.takeToTheLocal) {
+            await transporter.sendMail({
+                from: `'Empetel' <${process.env.MAIL_USERNAME}>`,
+                to: body.email,
+                subject: '¡Hemos recibido tu cita!',
+                html: await confirmedAppointmentEmailUser({
+                    ...newOrder._doc,
+                    faults: faultsNames,
+                    date: newOrder.takeToTheLocalData.date,
+                    hour: newOrder.takeToTheLocalData.hour,
+                    budget: newOrder.budget,
+                })
+            });
+
+            await transporter.sendMail({
+                from: `'Empetel' <${process.env.MAIL_USERNAME}>`,
+                to: process.env.OWNER_EMAIL,
+                subject: '¡Has recibido una cita en Granada Capital!',
+                html: await confrmedAppointmentEmailAdmin({
+                    ...newOrder._doc,
+                    faults: faultsNames,
+                    date: newOrder.takeToTheLocalData.date,
+                    hour: newOrder.takeToTheLocalData.hour,
+                    budget: newOrder.budget,
+                })
+            });
+        }
 
         return res.status(201).send({
             message: 'Orden creada exitosamente',
