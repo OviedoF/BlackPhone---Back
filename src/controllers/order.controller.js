@@ -136,9 +136,10 @@ orderController.createOrderDontRecognizedNothing = async (req, res) => {
         const transporter = await nodemailer.createTransport({
             host: process.env.MAIL_HOST,
             port: process.env.MAIL_PORT,
-            secure: false, 
-  tls: {
-    ciphers: 'SSLv3' },
+            secure: false,
+            tls: {
+                ciphers: 'SSLv3'
+            },
             auth: {
                 user: process.env.MAIL_USERNAME,
                 pass: process.env.MAIL_PASSWORD
@@ -220,12 +221,12 @@ orderController.createOrderDontRecognizedNothing = async (req, res) => {
             status: true
         });
     } catch (error) {
-    console.log(error);
-    return res.status(500).send({
-        message: 'Error al crear la orden',
-        status: false
-    });
-}
+        console.log(error);
+        return res.status(500).send({
+            message: 'Error al crear la orden',
+            status: false
+        });
+    }
 }
 
 orderController.createRecognizedLocalOrder = async (req, res) => {
@@ -245,9 +246,10 @@ orderController.createRecognizedLocalOrder = async (req, res) => {
         const transporter = await nodemailer.createTransport({
             host: process.env.MAIL_HOST,
             port: process.env.MAIL_PORT,
-            secure: false, 
-  tls: {
-    ciphers: 'SSLv3' },
+            secure: false,
+            tls: {
+                ciphers: 'SSLv3'
+            },
             auth: {
                 user: process.env.MAIL_USERNAME,
                 pass: process.env.MAIL_PASSWORD
@@ -302,7 +304,7 @@ orderController.createRecognizedLocalOrder = async (req, res) => {
 
         console.log(newOrder)
 
-        if(!newOrder.takeToTheLocal) {
+        if (!newOrder.takeToTheLocal) {
             await transporter.sendMail({
                 from: `'Empetel' <${process.env.MAIL_USERNAME}>`,
                 to: body.email,
@@ -324,7 +326,7 @@ orderController.createRecognizedLocalOrder = async (req, res) => {
             });
         }
 
-        if(newOrder.takeToTheLocal) {
+        if (newOrder.takeToTheLocal) {
             await transporter.sendMail({
                 from: `'Empetel' <${process.env.MAIL_USERNAME}>`,
                 to: body.email,
@@ -382,9 +384,10 @@ orderController.createRecognizedOutsideOrder = async (req, res) => {
         const transporter = await nodemailer.createTransport({
             host: process.env.MAIL_HOST,
             port: process.env.MAIL_PORT,
-            secure: false, 
-  tls: {
-    ciphers: 'SSLv3' },
+            secure: false,
+            tls: {
+                ciphers: 'SSLv3'
+            },
             auth: {
                 user: process.env.MAIL_USERNAME,
                 pass: process.env.MAIL_PASSWORD
@@ -486,9 +489,10 @@ orderController.createDontListenedItemOrder = async (req, res) => {
         const transporter = await nodemailer.createTransport({
             host: process.env.MAIL_HOST,
             port: process.env.MAIL_PORT,
-            secure: false, 
-  tls: {
-    ciphers: 'SSLv3' },
+            secure: false,
+            tls: {
+                ciphers: 'SSLv3'
+            },
             auth: {
                 user: process.env.MAIL_USERNAME,
                 pass: process.env.MAIL_PASSWORD
@@ -581,9 +585,10 @@ orderController.editOrderStatus = async (req, res) => {
         const transporter = await nodemailer.createTransport({
             host: process.env.MAIL_HOST,
             port: process.env.MAIL_PORT,
-            secure: false, 
-  tls: {
-    ciphers: 'SSLv3' },
+            secure: false,
+            tls: {
+                ciphers: 'SSLv3'
+            },
             auth: {
                 user: process.env.MAIL_USERNAME,
                 pass: process.env.MAIL_PASSWORD
@@ -607,14 +612,16 @@ orderController.editOrderStatus = async (req, res) => {
             status_history: statusHistory
         });
 
-        await transporter.sendMail({
-            from: `'Empetel' <${process.env.MAIL_USERNAME}>`,
-            to: orderUpdated.email,
-            subject: `¡Tu pedido está: ${statusFinded.name}!`,
-            html: await ChangeStatusEmail({
-                ...orderUpdated._doc,
-            }, statusFinded)
-        });
+        if(statusFinded.send) {
+            await transporter.sendMail({
+                from: `'Empetel' <${process.env.MAIL_USERNAME}>`,
+                to: orderUpdated.email,
+                subject: `¡Tu pedido está: ${statusFinded.name}!`,
+                html: await ChangeStatusEmail({
+                    ...orderUpdated._doc,
+                }, statusFinded)
+            });
+        }
 
         if (!orderUpdated) {
             return res.status(404).send({

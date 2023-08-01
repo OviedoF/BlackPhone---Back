@@ -60,13 +60,6 @@ style = "display: flex; align-items: center; justify-content: center; flex-direc
                     <th style="text-align: center; padding: 10px;border-bottom: 1px solid #292929;height: 50px;">${order.municipie}</th>
                 </tr>
 
-                ${order.province === 'Granada' && order.municipie === 'Granada' ? `
-                <tr style="border: 1px solid #292929;">
-                    <th style="text-align: center; padding: 10px;border-bottom: 1px solid #292929;height: 50px;">Dirección:</th>
-                    <th style="text-align: center; padding: 10px;border-bottom: 1px solid #292929;height: 50px;">${order.user_address}</th>
-                </tr>
-                ` : ''}
-
                 <tr style="border: 1px solid #292929;">
                     <th style="text-align: center; padding: 10px;border-bottom: 1px solid #292929;height: 50px;">Marca:</th>
                     <th style="text-align: center; padding: 10px;border-bottom: 1px solid #292929;height: 50px;">${
@@ -187,13 +180,6 @@ style = "display: flex; align-items: center; justify-content: center; flex-direc
                     <th style="text-align: center; padding: 10px;border-bottom: 1px solid #292929;height: 50px;">Municipio:</th>
                     <th style="text-align: center; padding: 10px;border-bottom: 1px solid #292929;height: 50px;">${order.municipie}</th>
                 </tr>
-
-                ${order.province === 'Granada' && order.municipie === 'Granada' ? `
-                <tr style="border: 1px solid #292929;">
-                    <th style="text-align: center; padding: 10px;border-bottom: 1px solid #292929;height: 50px;">Dirección:</th>
-                    <th style="text-align: center; padding: 10px;border-bottom: 1px solid #292929;height: 50px;">${order.user_address}</th>
-                </tr>
-                ` : ''}
 
                 <tr style="border: 1px solid #292929;">
                     <th style="text-align: center; padding: 10px;border-bottom: 1px solid #292929;height: 50px;">Marca:</th>

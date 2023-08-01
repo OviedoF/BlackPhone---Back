@@ -14,6 +14,11 @@ const StatusSchema = new Schema({
         required: true,
         default: false
     },
+    send: {
+        type: Boolean,
+        required: true,
+        default: false
+    }
 }, {
     timestamps: true
 });

@@ -5,7 +5,8 @@ const brandsController = {}
 
 brandsController.getBrands = async (req, res) => {
     try {
-        const brands = await Brands.find();
+        const brands = await Brands.find().sort({ name: 1 });
+        
         res.status(200).send({
             message: 'Brands retrieved successfully',
             brands,
