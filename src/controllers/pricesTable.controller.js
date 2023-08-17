@@ -2,6 +2,8 @@ const PricesTableInfo = require('../models/PricesTableInfo.model');
 const Prices = require('../models/Prices.model');
 const Faults = require('../models/Faults.model');
 const pricesTableController = {};
+const pdfsMaker = require('../utils/PricesPdfMaker');
+const path = require('path');
 
 pricesTableController.getPricesTableInfo = async (req, res) => {
     try {
@@ -23,7 +25,15 @@ pricesTableController.getPricesTableInfo = async (req, res) => {
 
 pricesTableController.getPrices = async (req, res) => {
     try {
-        const prices = await Prices.find().sort({ createdAt: -1 }).populate('brand');
+        const prices = await Prices.find().populate('brand').sort({ brand: 1 });
+
+        prices.sort((a, b) => {
+            if (a.brand.name.toLowerCase() > b.brand.name.toLowerCase()) return 1;
+            if (a.brand.name.toLowerCase() < b.brand.name.toLowerCase()) return -1;
+            if (a.model > b.model) return 1;
+            if (a.model < b.model) return -1;
+            return 0;
+        });
 
         res.status(200).send({
             data: prices,
@@ -202,6 +212,56 @@ pricesTableController.calculateBudget = async (req, res) => {
             message: 'Error al obtener un presupuesto, por favor intentelo de nuevo!',
             status: false,
             code: 500
+        });
+    }
+}
+
+pricesTableController.downloadPricesPDF = async (req, res) => {
+    try {
+        const prices = await Prices.find().populate('brand').sort({ brand: 1 });
+        const faults = await Faults.find();
+        
+        // order prices by brand and model alphabetically ignoring uppercase
+
+        prices.sort((a, b) => {
+            if (a.brand.name.toLowerCase() > b.brand.name.toLowerCase()) return 1;
+            if (a.brand.name.toLowerCase() < b.brand.name.toLowerCase()) return -1;
+            if (a.model > b.model) return 1;
+            if (a.model < b.model) return -1;
+            return 0;
+        });
+
+        await pdfsMaker.createPricesPdf({
+            prices,
+            faults
+        });
+
+        res.status(200).json({
+            status: true,
+            prices,
+            link: `${process.env.BASE_URL}api/prices/download-pdf`
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({
+            data: null,
+            message: 'Error al crear el PDF!',
+            status: false
+        });
+    }
+}
+
+pricesTableController.downloadPDF = async (req, res) => {
+    try {
+        const filePath = path.join(__dirname, '..', 'public', 'api', 'documents', `precios.pdf`);
+
+        res.status(200).download(filePath);
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({
+            data: null,
+            message: 'Error al descargar el PDF!',
+            status: false
         });
     }
 }
