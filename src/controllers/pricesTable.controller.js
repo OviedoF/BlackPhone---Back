@@ -239,7 +239,7 @@ pricesTableController.downloadPricesPDF = async (req, res) => {
         res.status(200).json({
             status: true,
             prices,
-            link: `${process.env.BASE_URL}api/prices/download-pdf`
+            link: `${process.env.BASE_URL}/prices/download-pdf`
         });
     } catch (error) {
         console.log(error);
