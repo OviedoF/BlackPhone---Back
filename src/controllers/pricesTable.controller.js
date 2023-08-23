@@ -25,7 +25,10 @@ pricesTableController.getPricesTableInfo = async (req, res) => {
 
 pricesTableController.getPrices = async (req, res) => {
     try {
-        const prices = await Prices.find().populate('brand').sort({ brand: 1 });
+        const { page = 1, limit = 10 } = req.query;
+        const prices = await Prices.find().populate('brand').sort({ brand: 1 })
+            .limit(parseInt(limit))
+            .skip((parseInt(page) - 1) * parseInt(limit));
 
         prices.sort((a, b) => {
             if (a.brand.name.toLowerCase() > b.brand.name.toLowerCase()) return 1;
