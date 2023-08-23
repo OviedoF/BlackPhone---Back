@@ -25,8 +25,11 @@ pricesTableController.getPricesTableInfo = async (req, res) => {
 
 pricesTableController.getPrices = async (req, res) => {
     try {
-        const { page = 1, limit = 10 } = req.query;
-        const prices = await Prices.find().populate('brand')
+        const { page = 1, limit = 10, brand, model } = req.query;
+        const prices = await Prices.find({
+            brand: brand ? brand : { $ne: null },
+            model: model ? model : { $ne: null }
+        }).populate('brand')
             .limit(limit * 1)
             .skip((page - 1) * limit)
             .sort({ 
