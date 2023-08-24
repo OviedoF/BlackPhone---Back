@@ -25,16 +25,26 @@ pricesTableController.getPricesTableInfo = async (req, res) => {
 
 pricesTableController.getPrices = async (req, res) => {
     try {
-        const { page = 1, limit = 10, brand, model } = req.query;
-        const prices = await Prices.find({
-            brand: brand ? brand : { $ne: null },
-            model: model ? model : { $ne: null }
-        }).populate('brand')
-            .limit(limit * 1)
-            .skip((page - 1) * limit)
-            .sort({ 
-                brand: 1,
-             });
+        const { page, limit, brand, model } = req.query;
+
+        let prices
+
+        if (!page || !limit) {
+            prices = await Prices.find({
+                brand: brand ? brand : { $ne: null },
+                model: model ? model : { $ne: null }
+            }).populate('brand')
+        } else {
+            prices = await Prices.find({
+                brand: brand ? brand : { $ne: null },
+                model: model ? model : { $ne: null }
+            }).populate('brand')
+                .limit(limit * 1)
+                .skip((page - 1) * limit)
+                .sort({
+                    brand: 1,
+                });
+        }
 
         prices.sort((a, b) => {
             if (a.brand.name.toLowerCase() > b.brand.name.toLowerCase()) return 1;
@@ -184,7 +194,7 @@ pricesTableController.calculateBudget = async (req, res) => {
 
         const priceItem = prices.find(price => price.brand.toString() == form.brand.value && price.model == form.model.value);
 
-        if(!priceItem) return res.status(200).send({
+        if (!priceItem) return res.status(200).send({
             data: null,
             message: 'Envío incorrecto!',
             status: false,
@@ -197,7 +207,7 @@ pricesTableController.calculateBudget = async (req, res) => {
 
         for (let fault of form.faults) {
             let costOfFault = parseInt(priceItem.prices[`${fault}${area}`]);
-            const {publicName} = await Faults.findOne({
+            const { publicName } = await Faults.findOne({
                 id: fault
             })
 
@@ -229,7 +239,7 @@ pricesTableController.downloadPricesPDF = async (req, res) => {
     try {
         const prices = await Prices.find().populate('brand').sort({ brand: 1 });
         const faults = await Faults.find();
-        
+
         // order prices by brand and model alphabetically ignoring uppercase
 
         prices.sort((a, b) => {
