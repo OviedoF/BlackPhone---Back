@@ -5,39 +5,41 @@ const path = require('path');
 const pdfsMaker = {};
 
 pdfsMaker.createPricesPdf = async (petition) => {
-    const body = [
+    const body = [];
+    
+    const headers = ['Marca', 'Modelo'];
 
-    ];
+    petition.faults.forEach(fault => {
+        headers.push(fault.publicName);
+    });
+
+    body.push(headers);
 
     petition.prices.forEach(price => {
-        body.push([
-            { text: `${price.brand.name} - ${price.model}`, style: 'subheader'},
-        ])
-
-        const ul = []
-        console.log(price.prices);
-
-        petition.faults.forEach(fault => {
-            console.log(price.prices[`${fault.id}${fault.idArea}`]);
-            console.log(`${fault.id}${fault.idArea}`);
-
-            if(price.prices[`${fault.id}${fault.idArea}`]){
-                ul.push(`${fault.publicName} (${fault.area}): €${price.prices[`${fault.id}${fault.idArea}`]}`);
-            }
-        });
-
-        body.push({
-            ul: ul
-        });
+        const row = [price.brand.name, price.model, ...petition.faults.map(fault => {
+            price.prices[`${fault.id}${fault.idArea}`] = price.prices[`${fault.id}${fault.idArea}`] ? `€${price.prices[`${fault.id}${fault.idArea}`]}` : '-';
+            return price.prices[`${fault.id}${fault.idArea}`];
+        })];
+        body.push(row);
     });
 
     console.log(body);
 
     const docDefinition = {
         content: [
-            { text: 'Lista de precios Empetel', style: 'header', alignment: 'center'  },
-            { text: 'Fecha: ' + new Date().toLocaleDateString(), style: 'subheader', alignment: 'center'  },
-            ...body
+            {
+                text: 'Precios de averías Empetel',
+                style: 'header'
+            },
+            'Precios de averías Empetel, con fecha al día del ' + new Date().toLocaleDateString() + '.',
+            {
+                style: 'tableExample',
+                table: {
+                    headerRows: 1,
+                    body
+                },
+                layout: 'headerLineOnly'
+            },
         ],
         styles: {
             header: {
