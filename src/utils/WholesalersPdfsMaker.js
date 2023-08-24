@@ -23,6 +23,8 @@ pdfsMaker.createPricesPdf = async (petition) => {
     });
 
     const docDefinition = {
+        pageOrientation: 'landscape',
+        pageMargins: [ 40, 60, 40, 60 ],
         content: [
             {
                 text: 'Precios al mayorista de Empetel',
