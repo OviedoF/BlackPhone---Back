@@ -10,7 +10,9 @@ pdfsMaker.createPricesPdf = async (petition) => {
     const headers = ['Marca', 'Modelo'];
 
     petition.faults.forEach(fault => {
-        headers.push(fault.publicName);
+        headers.push(
+            `${fault.publicName} ${fault.area}`
+        );
     });
 
     body.push(headers);
@@ -26,6 +28,8 @@ pdfsMaker.createPricesPdf = async (petition) => {
     console.log(body);
 
     const docDefinition = {
+        pageOrientation: 'landscape',
+        pageMargins: [ 40, 60, 40, 60 ],
         content: [
             {
                 text: 'Precios de averías Empetel',
