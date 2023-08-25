@@ -237,7 +237,14 @@ pricesTableController.calculateBudget = async (req, res) => {
 
 pricesTableController.downloadPricesPDF = async (req, res) => {
     try {
-        const prices = await Prices.find().populate('brand').sort({ brand: 1 });
+        const {idArea, brand} = req.query;
+
+        const prices = await Prices.find({
+            brand: brand ? brand : { $ne: null }
+        })
+            .populate('brand')
+            .sort({ brand: 1 });
+            
         const faults = await Faults.find();
 
         // order prices by brand and model alphabetically ignoring uppercase
@@ -249,6 +256,21 @@ pricesTableController.downloadPricesPDF = async (req, res) => {
             if (a.model < b.model) return -1;
             return 0;
         });
+
+        if (idArea) {
+            const filteredFaults = faults.filter(fault => fault.idArea === idArea);
+
+            await pdfsMaker.createPricesPdf({
+                prices,
+                faults: filteredFaults
+            });
+
+            return res.status(200).json({
+                status: true,
+                prices,
+                link: `${process.env.BASE_URL}/prices/download-pdf`
+            });
+        }
 
         await pdfsMaker.createPricesPdf({
             prices,
