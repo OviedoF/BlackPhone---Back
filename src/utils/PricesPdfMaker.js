@@ -28,6 +28,8 @@ pdfsMaker.createPricesPdf = async (petition) => {
     console.log(body);
 
     const docDefinition = {
+        pageOrientation: 'landscape',
+        pageMargins: [ 40, 60, 40, 60 ],
         content: [
             {
                 text: 'Precios de averías Empetel',
