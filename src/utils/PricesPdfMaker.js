@@ -11,7 +11,7 @@ pdfsMaker.createPricesPdf = async (petition) => {
 
     petition.faults.forEach(fault => {
         headers.push(
-            `${fault.publicName} ${fault.area}`
+            `${fault.publicName} (${fault.area})`
         );
     });
 
@@ -24,8 +24,6 @@ pdfsMaker.createPricesPdf = async (petition) => {
         })];
         body.push(row);
     });
-
-    console.log(body);
 
     const docDefinition = {
         pageOrientation: 'landscape',
