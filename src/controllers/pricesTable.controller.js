@@ -7,7 +7,14 @@ const path = require('path');
 
 function getModelOrder(model) {
     const match = model.match(/\d+/);
-    return match ? parseInt(match[0]) : 0;
+    if (match) {
+        const number = match[0];
+        if (number === "X") {
+            return 10; // Treat "X" as 10
+        }
+        return parseInt(number);
+    }
+    return 0;
 }
 
 function getModelLength(model) {
