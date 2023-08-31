@@ -5,13 +5,13 @@ const pricesTableController = {};
 const pdfsMaker = require('../utils/PricesPdfMaker');
 const path = require('path');
 
-function getModelOrder(model) {
+function getModelNumber(model) {
     const match = model.match(/\d+/);
     return match ? parseInt(match[0]) : 0;
 }
 
-function getBaseModelName(model) {
-    return model.replace(/\d+/g, '').trim();
+function findMatchingModelWithNumber(model, modelNumber, prices) {
+    return prices.find(price => getModelNumber(price.price.model) === modelNumber && price.price.model !== model);
 }
 
 pricesTableController.getPricesTableInfo = async (req, res) => {
@@ -62,16 +62,19 @@ pricesTableController.getPrices = async (req, res) => {
                 return brandComparison;
             }
 
-            const baseModelComparison = getBaseModelName(a.model).toLowerCase().localeCompare(getBaseModelName(b.model).toLowerCase());
+            const modelNumberA = getModelNumber(a.price.model);
+            const modelNumberB = getModelNumber(b.price.model);
 
-            if (baseModelComparison !== 0) {
-                return baseModelComparison;
+            if (modelNumberA !== modelNumberB) {
+                const matchingModelA = findMatchingModelWithNumber(a.price.model, modelNumberA, prices);
+                const matchingModelB = findMatchingModelWithNumber(b.price.model, modelNumberB, prices);
+
+                if (matchingModelA && matchingModelB) {
+                    return matchingModelA.price.model.localeCompare(matchingModelB.price.model);
+                }
             }
 
-            const modelOrderA = getModelOrder(a.model);
-            const modelOrderB = getModelOrder(b.model);
-
-            return modelOrderA - modelOrderB;
+            return modelNumberA - modelNumberB;
         });
 
         res.status(200).send({
@@ -275,16 +278,19 @@ pricesTableController.downloadPricesPDF = async (req, res) => {
                 return brandComparison;
             }
 
-            const baseModelComparison = getBaseModelName(a.model).toLowerCase().localeCompare(getBaseModelName(b.model).toLowerCase());
+            const modelNumberA = getModelNumber(a.price.model);
+            const modelNumberB = getModelNumber(b.price.model);
 
-            if (baseModelComparison !== 0) {
-                return baseModelComparison;
+            if (modelNumberA !== modelNumberB) {
+                const matchingModelA = findMatchingModelWithNumber(a.price.model, modelNumberA, prices);
+                const matchingModelB = findMatchingModelWithNumber(b.price.model, modelNumberB, prices);
+
+                if (matchingModelA && matchingModelB) {
+                    return matchingModelA.price.model.localeCompare(matchingModelB.price.model);
+                }
             }
 
-            const modelOrderA = getModelOrder(a.model);
-            const modelOrderB = getModelOrder(b.model);
-
-            return modelOrderA - modelOrderB;
+            return modelNumberA - modelNumberB;
         });
 
         // prices.sort((a, b) => {
