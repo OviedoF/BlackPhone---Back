@@ -5,11 +5,9 @@ const pricesTableController = {};
 const pdfsMaker = require('../utils/PricesPdfMaker');
 const path = require('path');
 
-function extractModelParts(model) {
-    const match = model.match(/([^\d]+)(\d+)?/);
-    const name = match[1].trim();
-    const number = match[2] ? parseInt(match[2]) : 0;
-    return { name, number };
+function getModelNumber(model) {
+    const match = model.match(/\d+/);
+    return match ? parseInt(match[0]) : 0;
 }
 
 pricesTableController.getPricesTableInfo = async (req, res) => {
@@ -55,19 +53,19 @@ pricesTableController.getPrices = async (req, res) => {
 
         prices.sort((a, b) => {
             const brandComparison = a.brand.name.toLowerCase().localeCompare(b.brand.name.toLowerCase());
-        
+
             if (brandComparison !== 0) {
                 return brandComparison;
             }
-        
-            const aModel = extractModelParts(a.model);
-            const bModel = extractModelParts(b.model);
-        
-            if (aModel.name !== bModel.name) {
-                return aModel.name.localeCompare(bModel.name);
+
+            const aModelNumber = getModelNumber(a.model);
+            const bModelNumber = getModelNumber(b.model);
+
+            if (a.model === b.model) {
+                return 0;
             }
-        
-            return aModel.number - bModel.number;
+
+            return aModelNumber - bModelNumber;
         });
 
         res.status(200).send({
@@ -253,33 +251,33 @@ pricesTableController.calculateBudget = async (req, res) => {
 
 pricesTableController.downloadPricesPDF = async (req, res) => {
     try {
-        const {idArea, brand} = req.query;
+        const { idArea, brand } = req.query;
 
         const prices = await Prices.find({
             brand: brand ? brand : { $ne: null }
         })
             .populate('brand')
             .sort({ brand: 1 });
-            
+
         const faults = await Faults.find();
 
         // order prices by brand and model alphabetically ignoring uppercase
 
         prices.sort((a, b) => {
             const brandComparison = a.brand.name.toLowerCase().localeCompare(b.brand.name.toLowerCase());
-        
+
             if (brandComparison !== 0) {
                 return brandComparison;
             }
-        
-            const aModel = extractModelParts(a.model);
-            const bModel = extractModelParts(b.model);
-        
-            if (aModel.name !== bModel.name) {
-                return aModel.name.localeCompare(bModel.name);
+
+            const aModelNumber = getModelNumber(a.model);
+            const bModelNumber = getModelNumber(b.model);
+
+            if (a.model === b.model) {
+                return 0;
             }
-        
-            return aModel.number - bModel.number;
+
+            return aModelNumber - bModelNumber;
         });
 
         // prices.sort((a, b) => {
