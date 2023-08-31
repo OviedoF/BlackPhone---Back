@@ -5,33 +5,9 @@ const pricesTableController = {};
 const pdfsMaker = require('../utils/PricesPdfMaker');
 const path = require('path');
 
-function compareModels(modelA, modelB) {
-    const regex = /([a-zA-Z]+)(\d+)?/; // Expresión regular para capturar letras y números
-    const matchA = modelA.match(regex);
-    const matchB = modelB.match(regex);
-
-    const nameComparison = matchA[1].localeCompare(matchB[1]);
-
-    if (nameComparison !== 0) {
-        return nameComparison;
-    }
-
-    // Si hay números en los modelos, compáralos como números
-    if (matchA[2] && matchB[2]) {
-        const numberA = parseInt(matchA[2]);
-        const numberB = parseInt(matchB[2]);
-        return numberA - numberB;
-    }
-
-    // Si solo uno de los modelos tiene número, el que tiene número va después
-    if (matchA[2]) {
-        return 1;
-    } else if (matchB[2]) {
-        return -1;
-    }
-
-    // Ambos modelos tienen el mismo nombre y no contienen números
-    return 0;
+function extractModelNumber(model) {
+    const matches = model.match(/\d+/); // Extract numbers from the model name
+    return matches ? parseInt(matches[0]) : Infinity;
 }
 
 pricesTableController.getPricesTableInfo = async (req, res) => {
@@ -74,21 +50,25 @@ pricesTableController.getPrices = async (req, res) => {
                     brand: 1,
                 });
         }
-prices.sort((a, b) => {
-    const brandComparison = a.brand.name.toLowerCase().localeCompare(b.brand.name.toLowerCase());
 
-    if (brandComparison !== 0) {
-        return brandComparison;
-    }
+        prices.sort((a, b) => {
+            const brandComparison = a.brand.name.toLowerCase().localeCompare(b.brand.name.toLowerCase());
 
-    // Extract the numeric part of the model name (e.g., "iPhone 6" -> 6)
-    const getModelNumber = (model) => parseInt(model.toLowerCase().replace("iphone", "").trim());
+            if (brandComparison !== 0) {
+                return brandComparison;
+            }
 
-    const modelNumberA = getModelNumber(a.model);
-    const modelNumberB = getModelNumber(b.model);
+            const modelComparison = a.model.toLowerCase().replace(/\d+/g, '').localeCompare(b.model.toLowerCase().replace(/\d+/g, ''));
 
-    return modelNumberA - modelNumberB;
-});
+            if (modelComparison !== 0) {
+                return modelComparison;
+            }
+
+            const modelNumberA = extractModelNumber(a.model);
+            const modelNumberB = extractModelNumber(b.model);
+
+            return modelNumberA - modelNumberB;
+        });
 
         res.status(200).send({
             data: prices,
@@ -284,21 +264,24 @@ pricesTableController.downloadPricesPDF = async (req, res) => {
         const faults = await Faults.find();
 
         // order prices by brand and model alphabetically ignoring uppercase
-prices.sort((a, b) => {
-    const brandComparison = a.brand.name.toLowerCase().localeCompare(b.brand.name.toLowerCase());
+        prices.sort((a, b) => {
+            const brandComparison = a.brand.name.toLowerCase().localeCompare(b.brand.name.toLowerCase());
 
-    if (brandComparison !== 0) {
-        return brandComparison;
-    }
+            if (brandComparison !== 0) {
+                return brandComparison;
+            }
 
-    // Extract the numeric part of the model name (e.g., "iPhone 6" -> 6)
-    const getModelNumber = (model) => parseInt(model.toLowerCase().replace("iphone", "").trim());
+            const modelComparison = a.model.toLowerCase().replace(/\d+/g, '').localeCompare(b.model.toLowerCase().replace(/\d+/g, ''));
 
-    const modelNumberA = getModelNumber(a.model);
-    const modelNumberB = getModelNumber(b.model);
+            if (modelComparison !== 0) {
+                return modelComparison;
+            }
 
-    return modelNumberA - modelNumberB;
-});
+            const modelNumberA = extractModelNumber(a.model);
+            const modelNumberB = extractModelNumber(b.model);
+
+            return modelNumberA - modelNumberB;
+        });
 
         // prices.sort((a, b) => {
         //     if (a.brand.name.toLowerCase() > b.brand.name.toLowerCase()) return 1;
