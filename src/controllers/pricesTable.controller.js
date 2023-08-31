@@ -5,6 +5,13 @@ const pricesTableController = {};
 const pdfsMaker = require('../utils/PricesPdfMaker');
 const path = require('path');
 
+function extractModelParts(model) {
+    const match = model.match(/([^\d]+)(\d+)?/);
+    const name = match[1].trim();
+    const number = match[2] ? parseInt(match[2]) : 0;
+    return { name, number };
+}
+
 pricesTableController.getPricesTableInfo = async (req, res) => {
     try {
         const pricesTableInfo = await PricesTableInfo.findOne().populate('faults');
@@ -47,11 +54,20 @@ pricesTableController.getPrices = async (req, res) => {
         }
 
         prices.sort((a, b) => {
-            if (a.brand.name.toLowerCase() > b.brand.name.toLowerCase()) return 1;
-            if (a.brand.name.toLowerCase() < b.brand.name.toLowerCase()) return -1;
-            if (a.model > b.model) return 1;
-            if (a.model < b.model) return -1;
-            return 0;
+            const brandComparison = a.brand.name.toLowerCase().localeCompare(b.brand.name.toLowerCase());
+        
+            if (brandComparison !== 0) {
+                return brandComparison;
+            }
+        
+            const aModel = extractModelParts(a.model);
+            const bModel = extractModelParts(b.model);
+        
+            if (aModel.name !== bModel.name) {
+                return aModel.name.localeCompare(bModel.name);
+            }
+        
+            return aModel.number - bModel.number;
         });
 
         res.status(200).send({
@@ -250,12 +266,29 @@ pricesTableController.downloadPricesPDF = async (req, res) => {
         // order prices by brand and model alphabetically ignoring uppercase
 
         prices.sort((a, b) => {
-            if (a.brand.name.toLowerCase() > b.brand.name.toLowerCase()) return 1;
-            if (a.brand.name.toLowerCase() < b.brand.name.toLowerCase()) return -1;
-            if (a.model > b.model) return 1;
-            if (a.model < b.model) return -1;
-            return 0;
+            const brandComparison = a.brand.name.toLowerCase().localeCompare(b.brand.name.toLowerCase());
+        
+            if (brandComparison !== 0) {
+                return brandComparison;
+            }
+        
+            const aModel = extractModelParts(a.model);
+            const bModel = extractModelParts(b.model);
+        
+            if (aModel.name !== bModel.name) {
+                return aModel.name.localeCompare(bModel.name);
+            }
+        
+            return aModel.number - bModel.number;
         });
+
+        // prices.sort((a, b) => {
+        //     if (a.brand.name.toLowerCase() > b.brand.name.toLowerCase()) return 1;
+        //     if (a.brand.name.toLowerCase() < b.brand.name.toLowerCase()) return -1;
+        //     if (a.model > b.model) return 1;
+        //     if (a.model < b.model) return -1;
+        //     return 0;
+        // });
 
         if (idArea) {
             const filteredFaults = faults.filter(fault => fault.idArea === idArea);
