@@ -74,16 +74,21 @@ pricesTableController.getPrices = async (req, res) => {
                     brand: 1,
                 });
         }
+prices.sort((a, b) => {
+    const brandComparison = a.brand.name.toLowerCase().localeCompare(b.brand.name.toLowerCase());
 
-        prices.sort((a, b) => {
-            const brandComparison = a.brand.name.toLowerCase().localeCompare(b.brand.name.toLowerCase());
+    if (brandComparison !== 0) {
+        return brandComparison;
+    }
 
-            if (brandComparison !== 0) {
-                return brandComparison;
-            }
+    // Extract the numeric part of the model name (e.g., "iPhone 6" -> 6)
+    const getModelNumber = (model) => parseInt(model.toLowerCase().replace("iphone", "").trim());
 
-            return compareModels(a.model, b.model);
-        });
+    const modelNumberA = getModelNumber(a.model);
+    const modelNumberB = getModelNumber(b.model);
+
+    return modelNumberA - modelNumberB;
+});
 
         res.status(200).send({
             data: prices,
@@ -279,16 +284,21 @@ pricesTableController.downloadPricesPDF = async (req, res) => {
         const faults = await Faults.find();
 
         // order prices by brand and model alphabetically ignoring uppercase
+prices.sort((a, b) => {
+    const brandComparison = a.brand.name.toLowerCase().localeCompare(b.brand.name.toLowerCase());
 
-        prices.sort((a, b) => {
-            const brandComparison = a.brand.name.toLowerCase().localeCompare(b.brand.name.toLowerCase());
+    if (brandComparison !== 0) {
+        return brandComparison;
+    }
 
-            if (brandComparison !== 0) {
-                return brandComparison;
-            }
+    // Extract the numeric part of the model name (e.g., "iPhone 6" -> 6)
+    const getModelNumber = (model) => parseInt(model.toLowerCase().replace("iphone", "").trim());
 
-            return compareModels(a.model, b.model);
-        });
+    const modelNumberA = getModelNumber(a.model);
+    const modelNumberB = getModelNumber(b.model);
+
+    return modelNumberA - modelNumberB;
+});
 
         // prices.sort((a, b) => {
         //     if (a.brand.name.toLowerCase() > b.brand.name.toLowerCase()) return 1;
