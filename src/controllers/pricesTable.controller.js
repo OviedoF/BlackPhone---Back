@@ -11,7 +11,7 @@ function getModelNumber(model) {
 }
 
 function findMatchingModelWithNumber(model, modelNumber, prices) {
-    return prices.find(price => getModelNumber(price.price.model) === modelNumber && price.price.model !== model);
+    return prices.find(price => getModelNumber(price.model) === modelNumber && price.model !== model);
 }
 
 pricesTableController.getPricesTableInfo = async (req, res) => {
@@ -62,21 +62,20 @@ pricesTableController.getPrices = async (req, res) => {
                 return brandComparison;
             }
 
-            const modelNumberA = getModelNumber(a.price.model);
-            const modelNumberB = getModelNumber(b.price.model);
+            const modelNumberA = getModelNumber(a.model);
+            const modelNumberB = getModelNumber(b.model);
 
             if (modelNumberA !== modelNumberB) {
-                const matchingModelA = findMatchingModelWithNumber(a.price.model, modelNumberA, prices);
-                const matchingModelB = findMatchingModelWithNumber(b.price.model, modelNumberB, prices);
+                const matchingModelA = findMatchingModelWithNumber(a.model, modelNumberA, prices);
+                const matchingModelB = findMatchingModelWithNumber(b.model, modelNumberB, prices);
 
                 if (matchingModelA && matchingModelB) {
-                    return matchingModelA.price.model.localeCompare(matchingModelB.price.model);
+                    return matchingModelA.model.localeCompare(matchingModelB.model);
                 }
             }
 
             return modelNumberA - modelNumberB;
         });
-
         res.status(200).send({
             data: prices,
             message: 'Obtenidos correctamente!',
@@ -278,21 +277,20 @@ pricesTableController.downloadPricesPDF = async (req, res) => {
                 return brandComparison;
             }
 
-            const modelNumberA = getModelNumber(a.price.model);
-            const modelNumberB = getModelNumber(b.price.model);
+            const modelNumberA = getModelNumber(a.model);
+            const modelNumberB = getModelNumber(b.model);
 
             if (modelNumberA !== modelNumberB) {
-                const matchingModelA = findMatchingModelWithNumber(a.price.model, modelNumberA, prices);
-                const matchingModelB = findMatchingModelWithNumber(b.price.model, modelNumberB, prices);
+                const matchingModelA = findMatchingModelWithNumber(a.model, modelNumberA, prices);
+                const matchingModelB = findMatchingModelWithNumber(b.model, modelNumberB, prices);
 
                 if (matchingModelA && matchingModelB) {
-                    return matchingModelA.price.model.localeCompare(matchingModelB.price.model);
+                    return matchingModelA.model.localeCompare(matchingModelB.model);
                 }
             }
 
             return modelNumberA - modelNumberB;
         });
-
         // prices.sort((a, b) => {
         //     if (a.brand.name.toLowerCase() > b.brand.name.toLowerCase()) return 1;
         //     if (a.brand.name.toLowerCase() < b.brand.name.toLowerCase()) return -1;
