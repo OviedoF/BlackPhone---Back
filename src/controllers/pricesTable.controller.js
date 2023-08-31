@@ -5,9 +5,33 @@ const pricesTableController = {};
 const pdfsMaker = require('../utils/PricesPdfMaker');
 const path = require('path');
 
-function getModelNumber(model) {
-    const match = model.match(/\d+/);
-    return match ? parseInt(match[0]) : 0;
+function compareModels(modelA, modelB) {
+    const regex = /([a-zA-Z]+)(\d+)?/; // Expresión regular para capturar letras y números
+    const matchA = modelA.match(regex);
+    const matchB = modelB.match(regex);
+
+    const nameComparison = matchA[1].localeCompare(matchB[1]);
+
+    if (nameComparison !== 0) {
+        return nameComparison;
+    }
+
+    // Si hay números en los modelos, compáralos como números
+    if (matchA[2] && matchB[2]) {
+        const numberA = parseInt(matchA[2]);
+        const numberB = parseInt(matchB[2]);
+        return numberA - numberB;
+    }
+
+    // Si solo uno de los modelos tiene número, el que tiene número va después
+    if (matchA[2]) {
+        return 1;
+    } else if (matchB[2]) {
+        return -1;
+    }
+
+    // Ambos modelos tienen el mismo nombre y no contienen números
+    return 0;
 }
 
 pricesTableController.getPricesTableInfo = async (req, res) => {
@@ -58,14 +82,7 @@ pricesTableController.getPrices = async (req, res) => {
                 return brandComparison;
             }
 
-            const aModelNumber = getModelNumber(a.model);
-            const bModelNumber = getModelNumber(b.model);
-
-            if (a.model === b.model) {
-                return 0;
-            }
-
-            return aModelNumber - bModelNumber;
+            return compareModels(a.model, b.model);
         });
 
         res.status(200).send({
@@ -270,14 +287,7 @@ pricesTableController.downloadPricesPDF = async (req, res) => {
                 return brandComparison;
             }
 
-            const aModelNumber = getModelNumber(a.model);
-            const bModelNumber = getModelNumber(b.model);
-
-            if (a.model === b.model) {
-                return 0;
-            }
-
-            return aModelNumber - bModelNumber;
+            return compareModels(a.model, b.model);
         });
 
         // prices.sort((a, b) => {
