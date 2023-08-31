@@ -5,9 +5,13 @@ const pricesTableController = {};
 const pdfsMaker = require('../utils/PricesPdfMaker');
 const path = require('path');
 
-function extractModelNumber(model) {
-    const matches = model.match(/\d+/); // Extract numbers from the model name
-    return matches ? parseInt(matches[0]) : Infinity;
+function getModelOrder(model) {
+    const match = model.match(/\d+/);
+    return match ? parseInt(match[0]) : 0;
+}
+
+function getBaseModelName(model) {
+    return model.replace(/\d+/g, '').trim();
 }
 
 pricesTableController.getPricesTableInfo = async (req, res) => {
@@ -58,16 +62,16 @@ pricesTableController.getPrices = async (req, res) => {
                 return brandComparison;
             }
 
-            const modelComparison = a.model.toLowerCase().replace(/\d+/g, '').localeCompare(b.model.toLowerCase().replace(/\d+/g, ''));
+            const baseModelComparison = getBaseModelName(a.model).toLowerCase().localeCompare(getBaseModelName(b.model).toLowerCase());
 
-            if (modelComparison !== 0) {
-                return modelComparison;
+            if (baseModelComparison !== 0) {
+                return baseModelComparison;
             }
 
-            const modelNumberA = extractModelNumber(a.model);
-            const modelNumberB = extractModelNumber(b.model);
+            const modelOrderA = getModelOrder(a.model);
+            const modelOrderB = getModelOrder(b.model);
 
-            return modelNumberA - modelNumberB;
+            return modelOrderA - modelOrderB;
         });
 
         res.status(200).send({
@@ -271,16 +275,16 @@ pricesTableController.downloadPricesPDF = async (req, res) => {
                 return brandComparison;
             }
 
-            const modelComparison = a.model.toLowerCase().replace(/\d+/g, '').localeCompare(b.model.toLowerCase().replace(/\d+/g, ''));
+            const baseModelComparison = getBaseModelName(a.model).toLowerCase().localeCompare(getBaseModelName(b.model).toLowerCase());
 
-            if (modelComparison !== 0) {
-                return modelComparison;
+            if (baseModelComparison !== 0) {
+                return baseModelComparison;
             }
 
-            const modelNumberA = extractModelNumber(a.model);
-            const modelNumberB = extractModelNumber(b.model);
+            const modelOrderA = getModelOrder(a.model);
+            const modelOrderB = getModelOrder(b.model);
 
-            return modelNumberA - modelNumberB;
+            return modelOrderA - modelOrderB;
         });
 
         // prices.sort((a, b) => {
