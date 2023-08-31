@@ -13,9 +13,12 @@ function getModelOrder(model) {
             return 10; // Treat "X" as 10
         }
         return parseInt(number);
+    } else if (model.includes("X")) {
+        return 10; // Treat "X" as 10 when no number found
     }
     return 0;
 }
+
 
 function getModelLength(model) {
     return model.match(/\d+/) ? model.match(/\d+/)[0].length : 0;
