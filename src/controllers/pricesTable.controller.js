@@ -18,6 +18,10 @@ function getModelOrder(model) {
     return Infinity; // Model without a number gets a very high order
 }
 
+function getModelBaseName(model) {
+    return model.replace(/\d+/g, '').trim();
+}
+
 pricesTableController.getPricesTableInfo = async (req, res) => {
     try {
         const pricesTableInfo = await PricesTableInfo.findOne().populate('faults');
@@ -61,20 +65,22 @@ pricesTableController.getPrices = async (req, res) => {
 
         prices.sort((a, b) => {
             const brandComparison = a.brand.name.toLowerCase().localeCompare(b.brand.name.toLowerCase());
-        
+
             if (brandComparison !== 0) {
                 return brandComparison;
             }
-        
+
+            const modelBaseNameA = getModelBaseName(a.model);
+            const modelBaseNameB = getModelBaseName(b.model);
+
+            if (modelBaseNameA !== modelBaseNameB) {
+                return modelBaseNameA.localeCompare(modelBaseNameB);
+            }
+
             const modelOrderA = getModelOrder(a.model);
             const modelOrderB = getModelOrder(b.model);
-        
-            // Compare models with numbers; if no numbers, consider them equal
-            if (modelOrderA !== Infinity && modelOrderB !== Infinity) {
-                return modelOrderB - modelOrderA; // Descending order
-            }
-        
-            return a.model.localeCompare(b.model);
+
+            return modelOrderA - modelOrderB;
         });
 
         res.status(200).send({
@@ -273,20 +279,22 @@ pricesTableController.downloadPricesPDF = async (req, res) => {
         // order prices by brand and model alphabetically ignoring uppercase
         prices.sort((a, b) => {
             const brandComparison = a.brand.name.toLowerCase().localeCompare(b.brand.name.toLowerCase());
-        
+
             if (brandComparison !== 0) {
                 return brandComparison;
             }
-        
+
+            const modelBaseNameA = getModelBaseName(a.model);
+            const modelBaseNameB = getModelBaseName(b.model);
+
+            if (modelBaseNameA !== modelBaseNameB) {
+                return modelBaseNameA.localeCompare(modelBaseNameB);
+            }
+
             const modelOrderA = getModelOrder(a.model);
             const modelOrderB = getModelOrder(b.model);
-        
-            // Compare models with numbers; if no numbers, consider them equal
-            if (modelOrderA !== Infinity && modelOrderB !== Infinity) {
-                return modelOrderB - modelOrderA; // Descending order
-            }
-        
-            return a.model.localeCompare(b.model);
+
+            return modelOrderA - modelOrderB;
         });
 
         if (idArea) {
