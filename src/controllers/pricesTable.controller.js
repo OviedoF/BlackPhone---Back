@@ -19,17 +19,24 @@ function customModelCompare(a, b) {
 
     // Comparar por marca primero
     const brandComparison = a.brand.name.toLowerCase().localeCompare(b.brand.name.toLowerCase());
-
+    
     if (brandComparison !== 0) {
         return brandComparison;
     }
 
-    // Comparar por número
+    // Comparar por nombre del modelo (sin números ni ediciones)
+    const modelNameA = modelA.replace(/\d+/g, '').replace(/\s+/g, '');
+    const modelNameB = modelB.replace(/\d+/g, '').replace(/\s+/g, '');
+    
+    if (modelNameA !== modelNameB) {
+        return modelNameA.localeCompare(modelNameB);
+    }
+
+    // Dentro del mismo nombre de modelo, comparar por número y luego por edición
     if (numberA !== numberB) {
         return numberA - numberB;
     }
 
-    // Comparar por edición (letras)
     return editionA.localeCompare(editionB);
 }
 
