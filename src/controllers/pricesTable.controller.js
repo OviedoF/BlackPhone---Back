@@ -5,24 +5,32 @@ const pricesTableController = {};
 const pdfsMaker = require('../utils/PricesPdfMaker');
 const path = require('path');
 
-function customAlphanumericCompare(a, b) {
+function customModelCompare(a, b) {
     const modelA = a.model.toLowerCase();
     const modelB = b.model.toLowerCase();
-    const numericPartA = modelA.match(/\d+/);
-    const numericPartB = modelB.match(/\d+/);
 
-    // Compare the numeric parts
-    if (numericPartA && numericPartB) {
-        const numA = parseInt(numericPartA[0]);
-        const numB = parseInt(numericPartB[0]);
+    // Extraer números del modelo
+    const numberA = parseInt(modelA.match(/\d+/) || 0);
+    const numberB = parseInt(modelB.match(/\d+/) || 0);
 
-        if (numA !== numB) {
-            return numA - numB;
-        }
+    // Extraer letras o ediciones del modelo
+    const editionA = modelA.replace(/\d+/g, '').trim();
+    const editionB = modelB.replace(/\d+/g, '').trim();
+
+    // Comparar por marca primero
+    const brandComparison = a.brand.name.toLowerCase().localeCompare(b.brand.name.toLowerCase());
+
+    if (brandComparison !== 0) {
+        return brandComparison;
     }
 
-    // Compare the whole strings if the numeric parts are the same
-    return modelA.localeCompare(modelB);
+    // Comparar por número
+    if (numberA !== numberB) {
+        return numberA - numberB;
+    }
+
+    // Comparar por edición (letras)
+    return editionA.localeCompare(editionB);
 }
 
 pricesTableController.getPricesTableInfo = async (req, res) => {
@@ -67,15 +75,7 @@ pricesTableController.getPrices = async (req, res) => {
         }
 
 
-        prices.sort((a, b) => {
-            const brandComparison = a.brand.name.toLowerCase().localeCompare(b.brand.name.toLowerCase());
-
-            if (brandComparison !== 0) {
-                return brandComparison;
-            }
-
-            return customAlphanumericCompare(a, b);
-        });
+        prices.sort(customModelCompare);
 
         res.status(200).send({
             data: prices,
@@ -272,15 +272,7 @@ pricesTableController.downloadPricesPDF = async (req, res) => {
 
         // order prices by brand and model alphabetically ignoring uppercase
 
-        prices.sort((a, b) => {
-            const brandComparison = a.brand.name.toLowerCase().localeCompare(b.brand.name.toLowerCase());
-
-            if (brandComparison !== 0) {
-                return brandComparison;
-            }
-
-            return customAlphanumericCompare(a, b);
-        });
+        prices.sort(customModelCompare);
 
         if (idArea) {
             const filteredFaults = faults.filter(fault => fault.idArea === idArea);
