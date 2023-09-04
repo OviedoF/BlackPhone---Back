@@ -74,6 +74,8 @@ pricesTableController.getPrices = async (req, res) => {
             }
         });
 
+        console.log(page, limit);
+
         // if(page && limit !== 'undefined' && limit) {
         //     const startIndex = (parseInt(page) - 1) * parseInt(limit);
         //     const endIndex = parseInt(page) * parseInt(limit);
