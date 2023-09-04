@@ -40,24 +40,11 @@ pricesTableController.getPrices = async (req, res) => {
         const { page, limit, brand, model } = req.query;
 
         let prices
-
-        if (!page || !limit) {
-            prices = await Prices.find({
-                brand: brand ? brand : { $ne: null },
-                model: model ? model : { $ne: null }
-            }).populate('brand')
-        } else {
-            prices = await Prices.find({
-                brand: brand ? brand : { $ne: null },
-                model: model ? model : { $ne: null }
-            }).populate('brand')
-                .limit(limit * 1)
-                .skip((page - 1) * limit)
-                .sort({
-                    brand: 1,
-                });
-        }
-
+        
+        prices = await Prices.find({
+            brand: brand ? brand : { $ne: null },
+            model: model ? model : { $ne: null }
+        }).populate('brand')
 
         prices.sort((a, b) => {
             const brandComparison = a.brand.name.toLowerCase().localeCompare(b.brand.name.toLowerCase());
@@ -87,6 +74,34 @@ pricesTableController.getPrices = async (req, res) => {
             }
         });
 
+        if(page && limit) {
+            const startIndex = (parseInt(page) - 1) * parseInt(limit);
+            const endIndex = parseInt(page) * parseInt(limit);
+
+            const results = {};
+
+            if (endIndex < prices.length) {
+                results.next = {
+                    page: parseInt(page) + 1,
+                    limit: parseInt(limit)
+                }
+            }
+
+            if (startIndex > 0) {
+                results.previous = {
+                    page: parseInt(page) - 1,
+                    limit: parseInt(limit)
+                }
+            }
+
+            results.results = prices.slice(startIndex, endIndex);
+
+            return res.status(200).send({
+                data: results,
+                message: 'Obtenidos correctamente!',
+                status: true
+            });
+        }
 
         res.status(200).send({
             data: prices,
@@ -310,7 +325,6 @@ pricesTableController.downloadPricesPDF = async (req, res) => {
                 return editionA.localeCompare(editionB);
             }
         });
-
 
         if (idArea) {
             const filteredFaults = faults.filter(fault => fault.idArea === idArea);
