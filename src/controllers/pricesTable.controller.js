@@ -5,39 +5,14 @@ const pricesTableController = {};
 const pdfsMaker = require('../utils/PricesPdfMaker');
 const path = require('path');
 
-function customModelCompare(a, b) {
-    const modelA = a.model.toLowerCase();
-    const modelB = b.model.toLowerCase();
+function getModelVersion(model) {
+    const match = model.match(/\d+/);
+    return match ? parseInt(match[0]) : Infinity;
+}
 
-    // Extraer números del modelo
-    const numberA = parseInt(modelA.match(/\d+/) || 0);
-    const numberB = parseInt(modelB.match(/\d+/) || 0);
-
-    // Extraer letras o ediciones del modelo
-    const editionA = modelA.replace(/\d+/g, '').trim();
-    const editionB = modelB.replace(/\d+/g, '').trim();
-
-    // Comparar por marca primero
-    const brandComparison = a.brand.name.toLowerCase().localeCompare(b.brand.name.toLowerCase());
-    
-    if (brandComparison !== 0) {
-        return brandComparison;
-    }
-
-    // Comparar por nombre del modelo (sin números ni ediciones)
-    const modelNameA = modelA.replace(/\d+/g, '').replace(/\s+/g, '');
-    const modelNameB = modelB.replace(/\d+/g, '').replace(/\s+/g, '');
-    
-    if (modelNameA !== modelNameB) {
-        return modelNameA.localeCompare(modelNameB);
-    }
-
-    // Dentro del mismo nombre de modelo, comparar por número y luego por edición
-    if (numberA !== numberB) {
-        return numberA - numberB;
-    }
-
-    return editionA.localeCompare(editionB);
+function getModelEdition(model) {
+    const editionMatch = model.match(/\b\d+\s*(\S+)\b/);
+    return editionMatch ? editionMatch[1] : '';
 }
 
 pricesTableController.getPricesTableInfo = async (req, res) => {
@@ -82,7 +57,28 @@ pricesTableController.getPrices = async (req, res) => {
         }
 
 
-        prices.sort(customModelCompare);
+        prices.sort((a, b) => {
+            const brandComparison = a.brand.name.toLowerCase().localeCompare(b.brand.name.toLowerCase());
+
+            if (brandComparison !== 0) {
+                return brandComparison;
+            }
+
+            const modelA = a.model.toLowerCase();
+            const modelB = b.model.toLowerCase();
+
+            const versionA = getModelVersion(modelA);
+            const versionB = getModelVersion(modelB);
+
+            if (versionA !== versionB) {
+                return versionA - versionB;
+            }
+
+            const editionA = getModelEdition(modelA);
+            const editionB = getModelEdition(modelB);
+
+            return editionA.localeCompare(editionB);
+        });
 
         res.status(200).send({
             data: prices,
@@ -279,7 +275,28 @@ pricesTableController.downloadPricesPDF = async (req, res) => {
 
         // order prices by brand and model alphabetically ignoring uppercase
 
-        prices.sort(customModelCompare);
+        prices.sort((a, b) => {
+            const brandComparison = a.brand.name.toLowerCase().localeCompare(b.brand.name.toLowerCase());
+
+            if (brandComparison !== 0) {
+                return brandComparison;
+            }
+
+            const modelA = a.model.toLowerCase();
+            const modelB = b.model.toLowerCase();
+
+            const versionA = getModelVersion(modelA);
+            const versionB = getModelVersion(modelB);
+
+            if (versionA !== versionB) {
+                return versionA - versionB;
+            }
+
+            const editionA = getModelEdition(modelA);
+            const editionB = getModelEdition(modelB);
+
+            return editionA.localeCompare(editionB);
+        });
 
         if (idArea) {
             const filteredFaults = faults.filter(fault => fault.idArea === idArea);
