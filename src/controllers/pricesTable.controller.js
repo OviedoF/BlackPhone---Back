@@ -78,23 +78,7 @@ pricesTableController.getPrices = async (req, res) => {
             const startIndex = (parseInt(page) - 1) * parseInt(limit);
             const endIndex = parseInt(page) * parseInt(limit);
 
-            const results = {};
-
-            if (endIndex < prices.length) {
-                results.next = {
-                    page: parseInt(page) + 1,
-                    limit: parseInt(limit)
-                }
-            }
-
-            if (startIndex > 0) {
-                results.previous = {
-                    page: parseInt(page) - 1,
-                    limit: parseInt(limit)
-                }
-            }
-
-            results.results = prices.slice(startIndex, endIndex);
+            results = prices.slice(startIndex, endIndex);
 
             return res.status(200).send({
                 data: results,
