@@ -60,25 +60,33 @@ pricesTableController.getPrices = async (req, res) => {
 
 
         prices.sort((a, b) => {
-    const brandComparison = a.brand.name.toLowerCase().localeCompare(b.brand.name.toLowerCase());
+            const brandComparison = a.brand.name.toLowerCase().localeCompare(b.brand.name.toLowerCase());
 
-    if (brandComparison !== 0) {
-        return brandComparison;
-    }
+            if (brandComparison !== 0) {
+                return brandComparison;
+            }
 
-    const [nameA, versionA, editionA] = getModelNameAndVersion(a.model.toLowerCase());
-    const [nameB, versionB, editionB] = getModelNameAndVersion(b.model.toLowerCase());
+            const [nameA, versionA, editionA] = getModelNameAndVersion(a.model.toLowerCase());
+            const [nameB, versionB, editionB] = getModelNameAndVersion(b.model.toLowerCase());
 
-    if (nameA !== nameB) {
-        return nameA.localeCompare(nameB);
-    }
+            if (nameA !== nameB) {
+                return nameA.localeCompare(nameB);
+            }
 
-    if (versionA !== versionB) {
-        return versionA - versionB;
-    }
+            if (versionA !== versionB) {
+                return versionA - versionB;
+            }
 
-    return editionA.localeCompare(editionB);
-});
+            // Aquí comparamos las ediciones; si una edición está vacía, se coloca después
+            if (editionA === '' && editionB !== '') {
+                return 1;
+            } else if (editionA !== '' && editionB === '') {
+                return -1;
+            } else {
+                return editionA.localeCompare(editionB);
+            }
+        });
+
 
         res.status(200).send({
             data: prices,
@@ -276,25 +284,33 @@ pricesTableController.downloadPricesPDF = async (req, res) => {
         // order prices by brand and model alphabetically ignoring uppercase
 
         prices.sort((a, b) => {
-    const brandComparison = a.brand.name.toLowerCase().localeCompare(b.brand.name.toLowerCase());
+            const brandComparison = a.brand.name.toLowerCase().localeCompare(b.brand.name.toLowerCase());
 
-    if (brandComparison !== 0) {
-        return brandComparison;
-    }
+            if (brandComparison !== 0) {
+                return brandComparison;
+            }
 
-    const [nameA, versionA, editionA] = getModelNameAndVersion(a.model.toLowerCase());
-    const [nameB, versionB, editionB] = getModelNameAndVersion(b.model.toLowerCase());
+            const [nameA, versionA, editionA] = getModelNameAndVersion(a.model.toLowerCase());
+            const [nameB, versionB, editionB] = getModelNameAndVersion(b.model.toLowerCase());
 
-    if (nameA !== nameB) {
-        return nameA.localeCompare(nameB);
-    }
+            if (nameA !== nameB) {
+                return nameA.localeCompare(nameB);
+            }
 
-    if (versionA !== versionB) {
-        return versionA - versionB;
-    }
+            if (versionA !== versionB) {
+                return versionA - versionB;
+            }
 
-    return editionA.localeCompare(editionB);
-});
+            // Aquí comparamos las ediciones; si una edición está vacía, se coloca después
+            if (editionA === '' && editionB !== '') {
+                return 1;
+            } else if (editionA !== '' && editionB === '') {
+                return -1;
+            } else {
+                return editionA.localeCompare(editionB);
+            }
+        });
+
 
         if (idArea) {
             const filteredFaults = faults.filter(fault => fault.idArea === idArea);
