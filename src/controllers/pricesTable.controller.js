@@ -8,20 +8,14 @@ const path = require('path');
 function getModelOrder(model) {
     const match = model.match(/\d+/);
     if (match) {
-        const number = match[0];
+        let number = match[0];
+        // Treat "X" as 10
         if (number === "X") {
-            return 10; // Treat "X" as 10
+            number = 10;
         }
         return parseInt(number);
-    } else if (model.includes("X")) {
-        return 10; // Treat "X" as 10 when no number found
     }
-    return 0;
-}
-
-
-function getModelLength(model) {
-    return model.match(/\d+/) ? model.match(/\d+/)[0].length : 0;
+    return Infinity; // Model without a number gets a very high order
 }
 
 pricesTableController.getPricesTableInfo = async (req, res) => {
@@ -67,25 +61,22 @@ pricesTableController.getPrices = async (req, res) => {
 
         prices.sort((a, b) => {
             const brandComparison = a.brand.name.toLowerCase().localeCompare(b.brand.name.toLowerCase());
-
+        
             if (brandComparison !== 0) {
                 return brandComparison;
             }
-
-            const modelOrderComparison = getModelOrder(a.model) - getModelOrder(b.model);
-
-            if (modelOrderComparison !== 0) {
-                return modelOrderComparison;
+        
+            const modelOrderA = getModelOrder(a.model);
+            const modelOrderB = getModelOrder(b.model);
+        
+            // Compare models with numbers; if no numbers, consider them equal
+            if (modelOrderA !== Infinity && modelOrderB !== Infinity) {
+                return modelOrderB - modelOrderA; // Descending order
             }
-
-            const modelLengthComparison = getModelLength(b.model) - getModelLength(a.model);
-
-            if (modelLengthComparison !== 0) {
-                return modelLengthComparison;
-            }
-
+        
             return a.model.localeCompare(b.model);
         });
+
         res.status(200).send({
             data: prices,
             message: 'Obtenidos correctamente!',
@@ -282,32 +273,21 @@ pricesTableController.downloadPricesPDF = async (req, res) => {
         // order prices by brand and model alphabetically ignoring uppercase
         prices.sort((a, b) => {
             const brandComparison = a.brand.name.toLowerCase().localeCompare(b.brand.name.toLowerCase());
-
+        
             if (brandComparison !== 0) {
                 return brandComparison;
             }
-
-            const modelOrderComparison = getModelOrder(a.model) - getModelOrder(b.model);
-
-            if (modelOrderComparison !== 0) {
-                return modelOrderComparison;
+        
+            const modelOrderA = getModelOrder(a.model);
+            const modelOrderB = getModelOrder(b.model);
+        
+            // Compare models with numbers; if no numbers, consider them equal
+            if (modelOrderA !== Infinity && modelOrderB !== Infinity) {
+                return modelOrderB - modelOrderA; // Descending order
             }
-
-            const modelLengthComparison = getModelLength(b.model) - getModelLength(a.model);
-
-            if (modelLengthComparison !== 0) {
-                return modelLengthComparison;
-            }
-
+        
             return a.model.localeCompare(b.model);
         });
-        // prices.sort((a, b) => {
-        //     if (a.brand.name.toLowerCase() > b.brand.name.toLowerCase()) return 1;
-        //     if (a.brand.name.toLowerCase() < b.brand.name.toLowerCase()) return -1;
-        //     if (a.model > b.model) return 1;
-        //     if (a.model < b.model) return -1;
-        //     return 0;
-        // });
 
         if (idArea) {
             const filteredFaults = faults.filter(fault => fault.idArea === idArea);
