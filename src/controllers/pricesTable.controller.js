@@ -5,21 +5,24 @@ const pricesTableController = {};
 const pdfsMaker = require('../utils/PricesPdfMaker');
 const path = require('path');
 
-function getModelOrder(model) {
-    const match = model.match(/\d+/);
-    if (match) {
-        let number = match[0];
-        // Treat "X" as 10
-        if (number === "X") {
-            number = 10;
-        }
-        return parseInt(number);
-    }
-    return Infinity; // Model without a number gets a very high order
-}
+function customAlphanumericCompare(a, b) {
+    const modelA = a.model.toLowerCase();
+    const modelB = b.model.toLowerCase();
+    const numericPartA = modelA.match(/\d+/);
+    const numericPartB = modelB.match(/\d+/);
 
-function getModelBaseName(model) {
-    return model.replace(/\d+/g, '').trim();
+    // Compare the numeric parts
+    if (numericPartA && numericPartB) {
+        const numA = parseInt(numericPartA[0]);
+        const numB = parseInt(numericPartB[0]);
+
+        if (numA !== numB) {
+            return numA - numB;
+        }
+    }
+
+    // Compare the whole strings if the numeric parts are the same
+    return modelA.localeCompare(modelB);
 }
 
 pricesTableController.getPricesTableInfo = async (req, res) => {
@@ -63,6 +66,7 @@ pricesTableController.getPrices = async (req, res) => {
                 });
         }
 
+
         prices.sort((a, b) => {
             const brandComparison = a.brand.name.toLowerCase().localeCompare(b.brand.name.toLowerCase());
 
@@ -70,17 +74,7 @@ pricesTableController.getPrices = async (req, res) => {
                 return brandComparison;
             }
 
-            const modelBaseNameA = getModelBaseName(a.model);
-            const modelBaseNameB = getModelBaseName(b.model);
-
-            if (modelBaseNameA !== modelBaseNameB) {
-                return modelBaseNameA.localeCompare(modelBaseNameB);
-            }
-
-            const modelOrderA = getModelOrder(a.model);
-            const modelOrderB = getModelOrder(b.model);
-
-            return modelOrderA - modelOrderB;
+            return customAlphanumericCompare(a, b);
         });
 
         res.status(200).send({
@@ -277,6 +271,7 @@ pricesTableController.downloadPricesPDF = async (req, res) => {
         const faults = await Faults.find();
 
         // order prices by brand and model alphabetically ignoring uppercase
+
         prices.sort((a, b) => {
             const brandComparison = a.brand.name.toLowerCase().localeCompare(b.brand.name.toLowerCase());
 
@@ -284,17 +279,7 @@ pricesTableController.downloadPricesPDF = async (req, res) => {
                 return brandComparison;
             }
 
-            const modelBaseNameA = getModelBaseName(a.model);
-            const modelBaseNameB = getModelBaseName(b.model);
-
-            if (modelBaseNameA !== modelBaseNameB) {
-                return modelBaseNameA.localeCompare(modelBaseNameB);
-            }
-
-            const modelOrderA = getModelOrder(a.model);
-            const modelOrderB = getModelOrder(b.model);
-
-            return modelOrderA - modelOrderB;
+            return customAlphanumericCompare(a, b);
         });
 
         if (idArea) {
