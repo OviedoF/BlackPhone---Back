@@ -272,7 +272,13 @@ pricesTableController.calculateBudget = async (req, res) => {
 
 pricesTableController.downloadPricesPDF = async (req, res) => {
     try {
-        const { idArea, brand } = req.query;
+        const { brand, faults: faultsToPrint } = req.query;
+
+        const faultsToPrintIds = faultsToPrint ? faultsToPrint.split(',') : null;
+
+        if(faultsToPrintIds) faultsToPrintIds.pop();
+
+        console.log(faultsToPrintIds);
 
         const prices = await Prices.find({
             brand: brand ? brand : { $ne: null }
@@ -280,7 +286,13 @@ pricesTableController.downloadPricesPDF = async (req, res) => {
             .populate('brand')
             .sort({ brand: 1 });
 
-        const faults = await Faults.find();
+        let faults = await Faults.find();
+
+        if (faultsToPrintIds) {
+            faults = faults.filter(fault => faultsToPrintIds.includes(`${fault.id}${fault.idArea}`));
+        }
+
+        console.log(faults);
 
         // order prices by brand and model alphabetically ignoring uppercase
 
@@ -311,21 +323,6 @@ pricesTableController.downloadPricesPDF = async (req, res) => {
                 return editionA.localeCompare(editionB);
             }
         });
-
-        if (idArea) {
-            const filteredFaults = faults.filter(fault => fault.idArea === idArea);
-
-            await pdfsMaker.createPricesPdf({
-                prices,
-                faults: filteredFaults
-            });
-
-            return res.status(200).json({
-                status: true,
-                prices,
-                link: `${process.env.BASE_URL}/prices/download-pdf`
-            });
-        }
 
         await pdfsMaker.createPricesPdf({
             prices,
