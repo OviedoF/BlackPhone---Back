@@ -4,18 +4,7 @@ const Faults = require('../models/Faults.model');
 const pricesTableController = {};
 const pdfsMaker = require('../utils/PricesPdfMaker');
 const path = require('path');
-
-function getModelNameAndVersion(model) {
-    const match = model.match(/([^\d]+)(\d+)(\D*)/);
-
-    if (match) {
-        const [, name, version, edition] = match;
-        return [name.trim(), parseInt(version), edition.trim()];
-    } else {
-        // No se encontró un número de versión, considerar versión 0
-        return [model.trim(), 0, ''];
-    }
-}
+const {setPositions} = require('../config/initPricesPositions');
 
 pricesTableController.getPricesTableInfo = async (req, res) => {
     try {
@@ -42,37 +31,8 @@ pricesTableController.getPrices = async (req, res) => {
         let prices
         
         prices = await Prices.find({
-            brand: brand ? brand : { $ne: null },
-            model: model ? model : { $ne: null }
-        }).populate('brand')
-
-        prices.sort((a, b) => {
-            const brandComparison = a.brand.name.toLowerCase().localeCompare(b.brand.name.toLowerCase());
-
-            if (brandComparison !== 0) {
-                return brandComparison;
-            }
-
-            const [nameA, versionA, editionA] = getModelNameAndVersion(a.model.toLowerCase());
-            const [nameB, versionB, editionB] = getModelNameAndVersion(b.model.toLowerCase());
-
-            if (nameA !== nameB) {
-                return nameA.localeCompare(nameB);
-            }
-
-            if (versionA !== versionB) {
-                return versionA - versionB;
-            }
-
-            // Aquí comparamos las ediciones; si una edición está vacía, se coloca después
-            if (editionA === '' && editionB !== '') {
-                return 1;
-            } else if (editionA !== '' && editionB === '') {
-                return -1;
-            } else {
-                return editionA.localeCompare(editionB);
-            }
-        });
+            position: { $ne: null },
+        }).populate('brand').sort({ position: 1 });
 
         console.log(page, limit);
 
@@ -107,6 +67,7 @@ pricesTableController.getPrices = async (req, res) => {
 pricesTableController.createPrice = async (req, res) => {
     try {
         const data = JSON.parse(req.body.data);
+
         const price = new Prices({
             ...data,
             prices: {
@@ -115,6 +76,7 @@ pricesTableController.createPrice = async (req, res) => {
         });
 
         await price.save();
+        await setPositions();
 
         res.status(200).send({
             data: price,
@@ -173,6 +135,113 @@ pricesTableController.deletePrice = async (req, res) => {
         res.status(500).send({
             data: null,
             message: 'Error al eliminar el precio!',
+            status: false
+        });
+    }
+}
+
+pricesTableController.changePosition = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { position } = req.body;
+        
+        const price = await Prices.findById(id);
+        const priceWithThatPosition = await Prices.findOne({ position });
+
+        if (priceWithThatPosition) {
+            priceWithThatPosition.position = price.position;
+            price.position = position;
+            await price.save();
+            await priceWithThatPosition.save();
+        } else {
+            price.position = position;
+            await price.save();
+        }
+
+        res.status(200).send({
+            data: null,
+            message: 'Posición cambiada correctamente!',
+            status: true
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({
+            data: null,
+            message: 'Error al cambiar la posición!',
+            status: false
+        });
+    }
+}
+
+pricesTableController.upPricePosition = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const Price = await Prices.findById(id);
+
+        if (Price.position === 1) return res.status(200).send({
+            data: null,
+            message: 'No se puede subir más!',
+            status: false
+        });
+
+        const PriceToChange = await Prices.findOne({ position: Price.position - 1 });
+
+        Price.position = Price.position - 1;
+
+        PriceToChange.position = PriceToChange.position + 1;
+
+        await Price.save();
+        await PriceToChange.save();
+
+        res.status(200).send({
+            data: null,
+            message: 'Posición cambiada correctamente!',
+            status: true
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({
+            data: null,
+            message: 'Error al cambiar la posición!',
+            status: false
+        });
+    }
+}
+
+pricesTableController.downPricePosition = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const Price = await Prices.findById(id);
+
+        const PricesCount = await Prices.countDocuments();
+
+        if (Price.position === PricesCount) return res.status(200).send({
+            data: null,
+            message: 'No se puede bajar más!',
+            status: false
+        });
+
+        const PriceToChange = await Prices.findOne({ position: Price.position + 1 });
+
+        Price.position = Price.position + 1;
+
+        PriceToChange.position = PriceToChange.position - 1;
+
+        await Price.save();
+        await PriceToChange.save();
+
+        res.status(200).send({
+            data: null,
+            message: 'Posición cambiada correctamente!',
+            status: true
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({
+            data: null,
+            message: 'Error al cambiar la posición!',
             status: false
         });
     }
@@ -284,45 +353,13 @@ pricesTableController.downloadPricesPDF = async (req, res) => {
             brand: brand ? brand : { $ne: null }
         })
             .populate('brand')
-            .sort({ brand: 1 });
+            .sort({ position: 1 });
 
         let faults = await Faults.find();
 
         if (faultsToPrintIds) {
             faults = faults.filter(fault => faultsToPrintIds.includes(`${fault.id}${fault.idArea}`));
         }
-
-        console.log(faults);
-
-        // order prices by brand and model alphabetically ignoring uppercase
-
-        prices.sort((a, b) => {
-            const brandComparison = a.brand.name.toLowerCase().localeCompare(b.brand.name.toLowerCase());
-
-            if (brandComparison !== 0) {
-                return brandComparison;
-            }
-
-            const [nameA, versionA, editionA] = getModelNameAndVersion(a.model.toLowerCase());
-            const [nameB, versionB, editionB] = getModelNameAndVersion(b.model.toLowerCase());
-
-            if (nameA !== nameB) {
-                return nameA.localeCompare(nameB);
-            }
-
-            if (versionA !== versionB) {
-                return versionA - versionB;
-            }
-
-            // Aquí comparamos las ediciones; si una edición está vacía, se coloca después
-            if (editionA === '' && editionB !== '') {
-                return 1;
-            } else if (editionA !== '' && editionB === '') {
-                return -1;
-            } else {
-                return editionA.localeCompare(editionB);
-            }
-        });
 
         await pdfsMaker.createPricesPdf({
             prices,

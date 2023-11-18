@@ -11,9 +11,10 @@ const PricesSchema = new Schema({
         default: {
             modifiedAt: new Date().toLocaleDateString(),
         }
-    }
+    },
+    position: Number,
 }, {
     timestamps: true
 });
 
-module.exports = model('Prices', PricesSchema);
+module.exports = model('Prices', PricesSchema); 

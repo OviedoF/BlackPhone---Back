@@ -8,7 +8,7 @@ const PricesTableInfoSchema = new Schema({
     faults: [{
         type: Schema.Types.ObjectId,
         ref: 'Faults'
-    }],
+    }]
 });
 
 module.exports = model('PricesTableInfo', PricesTableInfoSchema);

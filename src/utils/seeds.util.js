@@ -3,6 +3,7 @@ const Province = require('../models/Province.model');
 const PricesRules = require('../models/PricesRules.model');
 const WebTexts = require('../models/WebTexts.model');
 const provinces = require('./provinces.json');
+const Config = require('../models/Config.model');
 const createInitialStatus = require('./createInitialStatus');
 const createInitialAdmin = require('./createInitialAdmin');
 
@@ -208,6 +209,20 @@ const clearWebTexts = async () => {
     console.log('[SEED] Web texts deleted');
 }
 
+const setInitialConfig = async () => {
+    const configDocs = await Config.find();
+
+    if (configDocs.length > 0) return;
+
+    const config = new Config({
+        initialPositionsPrices: false,
+    });
+
+    await config.save();
+
+    console.log('[SEED] Config seeded! 🌱');
+}
+
 const runSeeders = async () => {
     await initialPricesTableInfo();
     await setInitialProvinces();
@@ -215,6 +230,7 @@ const runSeeders = async () => {
     await createInitialAdmin();
     await setInitialPricesRules();
     await setInitialWebTexts();
+    await setInitialConfig();
 }
 
 module.exports = runSeeders;

@@ -11,6 +11,8 @@ router.post('/', pricesTableController.createPrice);
 router.put('/', pricesTableController.updatePrices)
 router.delete('/:id', pricesTableController.deletePrice);
 
+router.put('/position/:id', pricesTableController.changePosition);
+
 router.post('/calculateBudget', pricesTableController.calculateBudget);
 
 
