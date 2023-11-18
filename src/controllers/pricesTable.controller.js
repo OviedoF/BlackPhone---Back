@@ -32,6 +32,8 @@ pricesTableController.getPrices = async (req, res) => {
         
         prices = await Prices.find({
             position: { $ne: null },
+            brand: brand ? brand : { $ne: null },
+            model: model ? model : { $ne: null }
         }).populate('brand').sort({ position: 1 });
 
         console.log(page, limit);
