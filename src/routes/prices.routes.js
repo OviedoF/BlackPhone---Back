@@ -5,6 +5,7 @@ const pricesTableController = require('../controllers/pricesTable.controller');
 
 router.get('/pdf', pricesTableController.downloadPricesPDF);
 router.get('/download-pdf', pricesTableController.downloadPDF);
+router.get('/models/:brand', pricesTableController.getAllModelsOfBrand);
 
 router.get('/', pricesTableController.getPrices);
 router.post('/', pricesTableController.createPrice);

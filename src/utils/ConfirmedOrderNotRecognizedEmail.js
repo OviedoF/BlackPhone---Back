@@ -11,42 +11,29 @@ module.exports = async (order) => {
                 </div>
 
                 <p style="font-size: 1.2rem; padding: 20px;">
-                Mucho gusto, ${order.name}, tu pedido ha sido recibido y estaremos en contacto contigo. ¡Muchas gracias por confiar en Empetel!
+                Mucho gusto, ${order.name}, tu pedido ha sido recibido y estaremos en contacto contigo. ¡Muchas gracias por confiar en Blackphone!
                 </p>
 
                 <h2 style="font-size: 1.2rem; padding: 20px;"> 
-                Como nuestra aplicación no pudo proporcionarte un precio, nos encargaremos de comunicarnos contigo y brindarte un presupuesto acorde a las fotos que nos has enviado.
+                Como nuestra aplicación no pudo proporcionarte un precio, nos encargaremos de comunicarnos contigo y brindarte un presupuesto acorde a los datos que nos has enviado.
                 </h2>
 
-                <h3 style="text-align: left;">A continuación, detallaremos los datos que nos brindaste: </h3>
-                <hr style="width: 100%;">
-
-                <ul style="list-style: none;">
-                ${order.data
-      .map(
-        (item) => `
-                    <li style="font-size: 1.2rem; padding: 20px; line-height: 1.5; font-weight: bold;":>${item.label}: ${item.value}</li>
-                  `
-      )
-      .join('')}
-              </ul>
-
                 <footer style="width: 100%; background-color: #1b6bb1; padding: 20px; color: white; box-sizing: border-box;">
-                    <p style="font-size: 1.2rem; text-align: center;">Este email fue enviado por el equipo de Empetel</p>
+                    <p style="font-size: 1.2rem; text-align: center;">Este email fue enviado por el equipo de Blackphone</p>
 
                     <ul style="display: flex; width: 100%; list-style: none; justify-content: center; padding: 0;">
                         <li style="font-size: 1.2rem; margin: 20px;">
-                            <a href="https://www.facebook.com/empetel" style="color: white; text-decoration: none;">
+                            <a href="https://www.facebook.com/Blackphone" style="color: white; text-decoration: none;">
                                 <img src="${process.env.BASE_URL + '/static/facebook.png'}" alt="facebook" style="width: 2em; height: 2em;">
                             </a>
                         </li>
                         <li style="font-size: 1.2rem; margin: 20px;">
-                            <a href="https://www.instagram.com/empetel" style="color: white; text-decoration: none;"> 
+                            <a href="https://www.instagram.com/Blackphone" style="color: white; text-decoration: none;"> 
                                 <img src="${process.env.BASE_URL + '/static/instagram.png'}" alt="instagram" style="width: 2em; height: 2em;">
                             </a>
                         </li>
                         <li style="font-size: 1.2rem; margin: 20px;">
-                            <a href="https://www.empetel.es" style="color: white; text-decoration: none;">
+                            <a href="https://www.Blackphone.es" style="color: white; text-decoration: none;">
                                 <img src="${process.env.BASE_URL + '/static/web.png'}" alt="web" style="width: 2em; height: 2em;">
                             </a>
                         </li>

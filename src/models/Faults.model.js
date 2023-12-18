@@ -12,7 +12,7 @@ const FaultsSchema = new Schema({
     area: {
         type: String,
         required: true,
-        enum: ['Granada', 'Fuera', 'Mayorista']
+        enum: ['Local', 'Fuera', 'Mayorista']
     },
     idArea: {
         type: String,

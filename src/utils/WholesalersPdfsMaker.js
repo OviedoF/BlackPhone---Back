@@ -27,10 +27,10 @@ pdfsMaker.createPricesPdf = async (petition) => {
         pageMargins: [ 40, 60, 40, 60 ],
         content: [
             {
-                text: 'Precios al mayorista de Empetel',
+                text: 'Precios al mayorista de Blackphone',
                 style: 'header'
             },
-            'Precios al mayorista de Empetel, con fecha al día del ' + new Date().toLocaleDateString() + '.',
+            'Precios al mayorista de Blackphone, con fecha al día del ' + new Date().toLocaleDateString() + '.',
             `Descargado por: ${petition.name}`,
             {
                 style: 'tableExample',
@@ -99,10 +99,10 @@ pdfsMaker.createPricesOutsidePdf = async (petition) => {
     const docDefinition = {
         content: [
             {
-                text: 'Precios al mayorista de Empetel',
+                text: 'Precios al mayorista de Blackphone',
                 style: 'header'
             },
-            'Precios al mayorista de Empetel, con fecha al día del ' + new Date().toLocaleDateString() + '.',
+            'Precios al mayorista de Blackphone, con fecha al día del ' + new Date().toLocaleDateString() + '.',
             `Descargado por: ${petition.name}`,
             {
                 style: 'tableExample',

@@ -9,14 +9,14 @@ style = "display: flex; align-items: center; justify-content: center; flex-direc
                     style="width: 100%;height:150px;object-fit: contain;">
                     <h2
                         style="color: white; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; text-align: center;">
-                        ¡Has solicitado un presupuesto en Empetel!
+                        ¡Has solicitado un presupuesto en Blackphone!
                     </h2>
             </div>
 
             <p style="text-align: center;font-size: 1.2rem; padding: 20px;">
                 Puedes seguir tu pedido en el siguiente link: 
-                <a href="https://citamovil.es/seguir-mi-reparacion" target="_blank">
-                https://citamovil.es/seguir-mi-reparacion
+                <a href="https://blackphone.es/seguir-mi-reparacion" target="_blank">
+                https://blackphone.es/seguir-mi-reparacion
                 </a>
             </p>
 
@@ -57,7 +57,7 @@ style = "display: flex; align-items: center; justify-content: center; flex-direc
 
                 <tr style="border: 1px solid #292929;">
                     <th style="text-align: center; padding: 10px;border-bottom: 1px solid #292929;height: 50px;">Municipio:</th>
-                    <th style="text-align: center; padding: 10px;border-bottom: 1px solid #292929;height: 50px;">${order.municipie}</th>
+                    <th style="text-align: center; padding: 10px;border-bottom: 1px solid #292929;height: 50px;">${order.city}</th>
                 </tr>
 
                 <tr style="border: 1px solid #292929;">
@@ -97,23 +97,23 @@ style = "display: flex; align-items: center; justify-content: center; flex-direc
 
     <footer
         style="width: 100%; background-color: #1b6bb1; padding: 20px; color: white; box-sizing: border-box;">
-        <p style="font-size: 1.2rem; text-align: center;">Este email fue enviado por el equipo de Empetel</p>
+        <p style="font-size: 1.2rem; text-align: center;">Este email fue enviado por el equipo de Blackphone</p>
 
         <ul style="display: flex; width: 100%; list-style: none; justify-content: center; padding: 0;">
             <li style="font-size: 1.2rem; margin: 20px;">
-                <a href="https://www.facebook.com/empetel" style="color: white; text-decoration: none;">
+                <a href="https://www.facebook.com/Blackphone" style="color: white; text-decoration: none;">
                     <img src="${process.env.BASE_URL + '/static/facebook.png'}" alt="facebook"
                         style="width: 2em; height: 2em;">
                 </a>
             </li>
             <li style="font-size: 1.2rem; margin: 20px;">
-                <a href="https://www.instagram.com/empetel" style="color: white; text-decoration: none;">
+                <a href="https://www.instagram.com/Blackphone" style="color: white; text-decoration: none;">
                     <img src="${process.env.BASE_URL + '/static/instagram.png'}" alt="instagram"
                         style="width: 2em; height: 2em;">
                 </a>
             </li>
             <li style="font-size: 1.2rem; margin: 20px;">
-                <a href="https://www.empetel.es" style="color: white; text-decoration: none;">
+                <a href="https://www.Blackphone.es" style="color: white; text-decoration: none;">
                     <img src="${process.env.BASE_URL + '/static/web.png'}" alt="web"
                         style="width: 2em; height: 2em;">
                 </a>
@@ -137,12 +137,12 @@ style = "display: flex; align-items: center; justify-content: center; flex-direc
                     style="width: 100%;height:150px;object-fit: contain;">
                     <h2
                         style="color: white; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; text-align: center;">
-                        ¡Han solicitado un presupuesto en Empetel!
+                        ¡Han solicitado un presupuesto en Blackphone!
                     </h2>
             </div>
 
             <p style="text-align: center;font-size: 1.2rem; padding: 20px;">
-                Han solicitado un presupuesto en Empetel, a continuación, detallaremos los datos que nos brindaron:
+                Han solicitado un presupuesto en Blackphone, a continuación, detallaremos los datos que nos brindaron:
             </p>
 
             <p style="text-align: center;font-size: 1.2rem; padding: 20px;">
@@ -178,7 +178,7 @@ style = "display: flex; align-items: center; justify-content: center; flex-direc
 
                 <tr style="border: 1px solid #292929;">
                     <th style="text-align: center; padding: 10px;border-bottom: 1px solid #292929;height: 50px;">Municipio:</th>
-                    <th style="text-align: center; padding: 10px;border-bottom: 1px solid #292929;height: 50px;">${order.municipie}</th>
+                    <th style="text-align: center; padding: 10px;border-bottom: 1px solid #292929;height: 50px;">${order.city}</th>
                 </tr>
 
                 <tr style="border: 1px solid #292929;">
@@ -218,23 +218,23 @@ style = "display: flex; align-items: center; justify-content: center; flex-direc
 
     <footer
         style="width: 100%; background-color: #1b6bb1; padding: 20px; color: white; box-sizing: border-box;">
-        <p style="font-size: 1.2rem; text-align: center;">Este email fue enviado por el equipo de Empetel</p>
+        <p style="font-size: 1.2rem; text-align: center;">Este email fue enviado por el equipo de Blackphone</p>
 
         <ul style="display: flex; width: 100%; list-style: none; justify-content: center; padding: 0;">
             <li style="font-size: 1.2rem; margin: 20px;">
-                <a href="https://www.facebook.com/empetel" style="color: white; text-decoration: none;">
+                <a href="https://www.facebook.com/Blackphone" style="color: white; text-decoration: none;">
                     <img src="${process.env.BASE_URL + '/static/facebook.png'}" alt="facebook"
                         style="width: 2em; height: 2em;">
                 </a>
             </li>
             <li style="font-size: 1.2rem; margin: 20px;">
-                <a href="https://www.instagram.com/empetel" style="color: white; text-decoration: none;">
+                <a href="https://www.instagram.com/Blackphone" style="color: white; text-decoration: none;">
                     <img src="${process.env.BASE_URL + '/static/instagram.png'}" alt="instagram"
                         style="width: 2em; height: 2em;">
                 </a>
             </li>
             <li style="font-size: 1.2rem; margin: 20px;">
-                <a href="https://www.empetel.es" style="color: white; text-decoration: none;">
+                <a href="https://www.Blackphone.es" style="color: white; text-decoration: none;">
                     <img src="${process.env.BASE_URL + '/static/web.png'}" alt="web"
                         style="width: 2em; height: 2em;">
                 </a>

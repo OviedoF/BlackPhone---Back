@@ -73,6 +73,7 @@ pricesTableController.createPrice = async (req, res) => {
         const price = new Prices({
             ...data,
             prices: {
+                ...data.prices,
                 modifiedAt: new Date().toLocaleDateString(),
             }
         });
@@ -360,7 +361,7 @@ pricesTableController.downloadPricesPDF = async (req, res) => {
         let faults = await Faults.find();
 
         if (faultsToPrintIds) {
-            faults = faults.filter(fault => faultsToPrintIds.includes(`${fault.id}${fault.idArea}`));
+            faults = faults.filter(fault => faultsToPrintIds.includes(`${fault.id}`));
         }
 
         await pdfsMaker.createPricesPdf({
@@ -393,6 +394,34 @@ pricesTableController.downloadPDF = async (req, res) => {
         res.status(500).send({
             data: null,
             message: 'Error al descargar el PDF!',
+            status: false
+        });
+    }
+}
+
+pricesTableController.getAllModelsOfBrand = async (req, res) => {
+    try {
+        const { brand } = req.params;
+
+        const prices = await Prices.find({
+            brand: brand ? brand : { $ne: null }
+        })
+            .populate('brand')
+            .sort({ position: 1 });
+
+        const models = prices.map(price => price.model);
+        console.log(models);
+
+        res.status(200).send({
+            data: models,
+            message: 'Obtenidos correctamente!',
+            status: true
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({
+            data: null,
+            message: 'Error al obtener los datos!',
             status: false
         });
     }

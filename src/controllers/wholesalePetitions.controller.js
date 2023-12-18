@@ -72,9 +72,9 @@ WholesalePetitionsController.createWholesalePetition = async (req, res) => {
         console.log(wholesalePetition)
 
         const mailOptions = {
-            from: `'Empetel' <${process.env.MAIL_USERNAME}>`,
+            from: `'Blackphone' <${process.env.MAIL_USERNAME}>`,
             to: process.env.OWNER_EMAIL,
-            subject: 'Empetel - Petición de acceso mayorista',
+            subject: 'Blackphone - Petición de acceso mayorista',
             html: `
             <body
         style = "display: flex; align-items: center; justify-content: center; flex-direction: column; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;" >
@@ -98,23 +98,23 @@ WholesalePetitionsController.createWholesalePetition = async (req, res) => {
         
             <footer
                 style="width: 100%; background-color: #1b6bb1; padding: 20px; color: white; box-sizing: border-box;">
-                <p style="font-size: 1.2rem; text-align: center;">Este email fue enviado por el equipo de Empetel</p>
+                <p style="font-size: 1.2rem; text-align: center;">Este email fue enviado por el equipo de Blackphone</p>
         
                 <ul style="display: flex; width: 100%; list-style: none; justify-content: center; padding: 0;">
                     <li style="font-size: 1.2rem; margin: 20px;">
-                        <a href="https://www.facebook.com/empetel" style="color: white; text-decoration: none;">
+                        <a href="https://www.facebook.com/Blackphone" style="color: white; text-decoration: none;">
                             <img src="${process.env.BASE_URL + '/static/facebook.png'}" alt="facebook"
                                 style="width: 2em; height: 2em;">
                         </a>
                     </li>
                     <li style="font-size: 1.2rem; margin: 20px;">
-                        <a href="https://www.instagram.com/empetel" style="color: white; text-decoration: none;">
+                        <a href="https://www.instagram.com/Blackphone" style="color: white; text-decoration: none;">
                             <img src="${process.env.BASE_URL + '/static/instagram.png'}" alt="instagram"
                                 style="width: 2em; height: 2em;">
                         </a>
                     </li>
                     <li style="font-size: 1.2rem; margin: 20px;">
-                        <a href="https://www.empetel.es" style="color: white; text-decoration: none;">
+                        <a href="https://www.Blackphone.es" style="color: white; text-decoration: none;">
                             <img src="${process.env.BASE_URL + '/static/web.png'}" alt="web"
                                 style="width: 2em; height: 2em;">
                         </a>
@@ -170,9 +170,9 @@ WholesalePetitionsController.approve = async (req, res) => {
         });
 
         const mailOptions = {
-            from: `'Empetel' <${process.env.MAIL_USERNAME}>`,
+            from: `'Blackphone' <${process.env.MAIL_USERNAME}>`,
             to: wholesalePetition.email,
-            subject: 'Empetel - Petición de mayorista aprobada',
+            subject: 'Blackphone - Petición de mayorista aprobada',
             html: await WholesalerApprovedEmail({
                 name: wholesalePetition.name,
                 link: `${process.env.FRONTEND_URL}/mayoristas/peticion?access=${wholesalePetition._id}`

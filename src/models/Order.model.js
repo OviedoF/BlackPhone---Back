@@ -1,74 +1,80 @@
 const {model, Schema} = require('mongoose');
 
 const OrderSchema = new Schema({
-    recognized: {
-        type: Boolean,
+    additionalCosts: [{
+        ref: 'AdditionalCost',
+        type: Schema.Types.ObjectId
+    }],
+    address: {
+        type: String
+    },
+    amount: {
+        type: Number,
         required: true
     },
-    // If not recognized
+    brand: {
+        ref: 'Brand',
+        type: Schema.Types.ObjectId
+    },
+    customBrand: {
+        type: String
+    },
+    city: {
+        type: String,
+        required: true
+    },
+    contact: {
+        type: String,
+        required: true
+    },
+    date: {
+        type: String
+    },
+    fault_details: {
+        type: String,
+    },
+    fault_photos: [{
+        type: String,
+    }],
+    faults: [{
+        ref: 'Faults',
+        type: Schema.Types.ObjectId
+    }],
+    method: {
+        type: String,
+        required: true
+    },
+    model: {
+        type: String,
+        required: true
+    },
     name: {
         type: String,
-        required: false
+        required: true
+    },
+    province: {
+        type: String,
+        required: true
+    },
+    hour: {
+        type: String,
+    },
+    status: {
+        ref: 'Status',
+        type: Schema.Types.ObjectId
+    },
+    status_history: [Object],
+    id: {
+        type: String,
+        required: true
     },
     phone: {
-        type: String,
-        required: false
+        type: String
     },
-    email: {
-        type: String,
-        required: false
+    recognized: {
+        type: Boolean,
+        default: true
     },
-    message: {
-        type: String,
-        required: false
-    },
-    phone_photos: [String],
-    fault_photos: [String],
-    fault_details: String,
-    additionalCosts: [Object],
-    brand: String,
-    model: String,
-    faults: [{
-        type: Schema.Types.ObjectId,
-        ref: 'Faults'
-    }],
-    goToTheHome: Boolean,
-    goToTheHomeData: {
-        address: String,
-        date: String,
-        hour: String,
-        additionalInfo: String,
-    },
-    province: String,
-    municipie: String,
-
-    takeToTheLocal: Boolean,
-    takeToTheLocalData: {
-        date: String,
-        hour: String,
-    },
-
-    dontRecognized: Object,
-    dontRecognizedNothing: Boolean,
-    user_address: String,
-    userContactData: {
-        name: String,
-        phone: String,
-        email: String,
-    },
-    id: String,
-    status: {
-        type: Schema.Types.ObjectId,
-        ref: 'Status'
-    },
-    status_history: [{
-        status: {
-            type: Schema.Types.ObjectId,
-            ref: 'Status'
-        },
-        date: String,
-    }],
-    budget: Number,
 }, {
     timestamps: true
 });

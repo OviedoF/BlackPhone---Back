@@ -13,19 +13,19 @@ const confirmedAppointmentEmailUser = async (order) => {
             </div>
 
             <p style="text-align: center;font-size: 1.2rem; padding: 20px;">
-                ¡Hola! Gracias por confiar en nosotros para revivir tu terminal. ¡En Empetel nos encargaremos de que tu terminal quede como nuevo! 
+                ¡Hola! Gracias por confiar en nosotros para revivir tu terminal. ¡En Blackphone nos encargaremos de que tu terminal quede como nuevo! 
             </p>
 
             <p style="text-align: center;font-size: 1.5rem; padding: 20px;">
                 Cita confirmada para el día: ${order.date}, a las: ${order.hour}. Precio final: €${order.budget.toFixed(2)}
             </p>
 
-            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d794.7610950312712!2d-3.6081294303941718!3d37.175416266836955!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd71fc93778e5937%3A0x68fedc42074a5175!2sEmpetel.%20Cl%C3%ADnica%20del%20m%C3%B3vil!5e0!3m2!1ses-419!2sar!4v1690404006545!5m2!1ses-419!2sar" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d794.7610950312712!2d-3.6081294303941718!3d37.175416266836955!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd71fc93778e5937%3A0x68fedc42074a5175!2sBlackphone.%20Cl%C3%ADnica%20del%20m%C3%B3vil!5e0!3m2!1ses-419!2sar!4v1690404006545!5m2!1ses-419!2sar" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
 
             <p style="text-align: center;font-size: 1.2rem; padding: 20px;">
                 Puedes seguir tu pedido en el siguiente link: 
-                <a href="https://citamovil.es/seguir-mi-reparacion" target="_blank">
-                https://citamovil.es/seguir-mi-reparacion
+                <a href="https://blackphone.es/seguir-mi-reparacion" target="_blank">
+                https://blackphone.es/seguir-mi-reparacion
                 </a>
             </p>
 
@@ -58,7 +58,7 @@ const confirmedAppointmentEmailUser = async (order) => {
                     <tr style="border: 1px solid #292929;">
 
                         <th style="text-align: center; padding: 10px;border-bottom: 1px solid #292929;height: 50px;">Municipio:</th>
-                        <th style="text-align: center; padding: 10px;border-bottom: 1px solid #292929;height: 50px;">${order.municipie}</th>
+                        <th style="text-align: center; padding: 10px;border-bottom: 1px solid #292929;height: 50px;">${order.city}</th>
                     </tr>
 
                     <tr style="border: 1px solid #292929;">
@@ -132,23 +132,23 @@ const confirmedAppointmentEmailUser = async (order) => {
 
     <footer
         style="width: 100%; background-color: #1b6bb1; padding: 20px; color: white; box-sizing: border-box;">
-        <p style="font-size: 1.2rem; text-align: center;">Este email fue enviado por el equipo de Empetel</p>
+        <p style="font-size: 1.2rem; text-align: center;">Este email fue enviado por el equipo de Blackphone</p>
 
         <ul style="display: flex; width: 100%; list-style: none; justify-content: center; padding: 0;">
             <li style="font-size: 1.2rem; margin: 20px;">
-                <a href="https://www.facebook.com/empetel" style="color: white; text-decoration: none;">
+                <a href="https://www.facebook.com/Blackphone" style="color: white; text-decoration: none;">
                     <img src="${process.env.BASE_URL + '/static/facebook.png'}" alt="facebook"
                         style="width: 2em; height: 2em;">
                 </a>
             </li>
             <li style="font-size: 1.2rem; margin: 20px;">
-                <a href="https://www.instagram.com/empetel" style="color: white; text-decoration: none;">
+                <a href="https://www.instagram.com/Blackphone" style="color: white; text-decoration: none;">
                     <img src="${process.env.BASE_URL + '/static/instagram.png'}" alt="instagram"
                         style="width: 2em; height: 2em;">
                 </a>
             </li>
             <li style="font-size: 1.2rem; margin: 20px;">
-                <a href="https://www.empetel.es" style="color: white; text-decoration: none;">
+                <a href="https://www.Blackphone.es" style="color: white; text-decoration: none;">
                     <img src="${process.env.BASE_URL + '/static/web.png'}" alt="web"
                         style="width: 2em; height: 2em;">
                 </a>
@@ -172,11 +172,11 @@ style = "display: flex; align-items: center; justify-content: center; flex-direc
                     style="width: 100%;height:150px;object-fit: contain;">
                     <h2
                         style="color: white; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; text-align: center;">
-                        ¡Has recibido una cita en Granada Capital!</h2>
+                        ¡Has recibido una cita en Gandía Capital!</h2>
             </div>
 
             <p style="text-align: center;font-size: 1.2rem; padding: 20px;">
-                ¡Has recibido una cita en Granada Capital por parte de: ${order.name}!
+                ¡Has recibido una cita en Gandía Capital por parte de: ${order.name}!
             </p>
 
             <p style="text-align: center;font-size: 1.5rem; padding: 20px;">
@@ -185,8 +185,8 @@ style = "display: flex; align-items: center; justify-content: center; flex-direc
 
             <p style="text-align: center;font-size: 1.2rem; padding: 20px;">
                 Puedes seguir tu pedido en el siguiente link: 
-                <a href="https://citamovil.es/seguir-mi-reparacion" target="_blank">
-                https://citamovil.es/seguir-mi-reparacion
+                <a href="https://blackphone.es/seguir-mi-reparacion" target="_blank">
+                https://blackphone.es/seguir-mi-reparacion
                 </a>
             </p>
 
@@ -224,7 +224,7 @@ style = "display: flex; align-items: center; justify-content: center; flex-direc
                 <tr style="border: 1px solid #292929;">
 
                     <th style="text-align: center; padding: 10px;border-bottom: 1px solid #292929;height: 50px;">Municipio:</th>
-                    <th style="text-align: center; padding: 10px;border-bottom: 1px solid #292929;height: 50px;">${order.municipie}</th>
+                    <th style="text-align: center; padding: 10px;border-bottom: 1px solid #292929;height: 50px;">${order.city}</th>
                 </tr>
 
                 <tr style="border: 1px solid #292929;">
@@ -298,23 +298,23 @@ style = "display: flex; align-items: center; justify-content: center; flex-direc
 
     <footer
         style="width: 100%; background-color: #1b6bb1; padding: 20px; color: white; box-sizing: border-box;">
-        <p style="font-size: 1.2rem; text-align: center;">Este email fue enviado por el equipo de Empetel</p>
+        <p style="font-size: 1.2rem; text-align: center;">Este email fue enviado por el equipo de Blackphone</p>
 
         <ul style="display: flex; width: 100%; list-style: none; justify-content: center; padding: 0;">
             <li style="font-size: 1.2rem; margin: 20px;">
-                <a href="https://www.facebook.com/empetel" style="color: white; text-decoration: none;">
+                <a href="https://www.facebook.com/Blackphone" style="color: white; text-decoration: none;">
                     <img src="${process.env.BASE_URL + '/static/facebook.png'}" alt="facebook"
                         style="width: 2em; height: 2em;">
                 </a>
             </li>
             <li style="font-size: 1.2rem; margin: 20px;">
-                <a href="https://www.instagram.com/empetel" style="color: white; text-decoration: none;">
+                <a href="https://www.instagram.com/Blackphone" style="color: white; text-decoration: none;">
                     <img src="${process.env.BASE_URL + '/static/instagram.png'}" alt="instagram"
                         style="width: 2em; height: 2em;">
                 </a>
             </li>
             <li style="font-size: 1.2rem; margin: 20px;">
-                <a href="https://www.empetel.es" style="color: white; text-decoration: none;">
+                <a href="https://www.Blackphone.es" style="color: white; text-decoration: none;">
                     <img src="${process.env.BASE_URL + '/static/web.png'}" alt="web"
                         style="width: 2em; height: 2em;">
                 </a>

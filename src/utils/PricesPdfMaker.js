@@ -11,7 +11,7 @@ pdfsMaker.createPricesPdf = async (petition) => {
 
     petition.faults.forEach(fault => {
         headers.push(
-            `${fault.publicName} (${fault.area})`
+            `${fault.publicName}`
         );
     });
 
@@ -19,8 +19,8 @@ pdfsMaker.createPricesPdf = async (petition) => {
 
     petition.prices.forEach(price => {
         const row = [price.brand.name, price.model, ...petition.faults.map(fault => {
-            price.prices[`${fault.id}${fault.idArea}`] = price.prices[`${fault.id}${fault.idArea}`] ? `€${price.prices[`${fault.id}${fault.idArea}`]}` : '-';
-            return price.prices[`${fault.id}${fault.idArea}`];
+            price.prices[`${fault.id}`] = price.prices[`${fault.id}`] ? `€${price.prices[`${fault.id}`]}` : '-';
+            return price.prices[`${fault.id}`];
         })];
         body.push(row);
     });
@@ -29,10 +29,10 @@ pdfsMaker.createPricesPdf = async (petition) => {
         pageMargins: [ 3, 3, 3, 3 ],
         content: [
             {
-                text: 'Precios de averías Empetel',
+                text: 'Precios de averías BlackPhone',
                 style: 'header'
             },
-            'Precios de averías Empetel, con fecha al día del ' + new Date().toLocaleDateString() + '.',
+            'Precios de averías BlackPhone, con fecha al día del ' + new Date().toLocaleDateString() + '.',
             {
                 style: 'tableExample',
                 table: {

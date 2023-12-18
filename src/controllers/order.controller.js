@@ -38,7 +38,8 @@ async function randomNumber() {
 
 orderController.getOrderById = async (req, res) => {
     try {
-        const order = await Order.findOne({ id: req.params.id }).populate('status').populate('faults').populate({
+        console.log(req.params)
+        const order = await Order.findOne({ id: req.params.id }).populate('status').populate('faults').populate('brand').populate({
             path: 'status_history',
             populate: {
                 path: 'status',
@@ -71,7 +72,7 @@ orderController.getUnrecognizedOrders = async (req, res) => {
     try {
         const page = parseInt(req.query.page);
         const limit = parseInt(req.query.limit);
-        const orders = await Order.find({ recognized: false }).populate('status').populate('faults').populate({
+        const orders = await Order.find({ recognized: false }).populate('status').populate('faults').populate("brand").populate({
             path: 'status_history',
             populate: {
                 path: 'status',
@@ -79,11 +80,8 @@ orderController.getUnrecognizedOrders = async (req, res) => {
             }
         }).sort({ createdAt: -1 }).skip((page - 1) * limit).limit(limit);
 
-        const totalOrders = await Order.countDocuments({ recognized: false });
-
         return res.status(200).send({
             orders,
-            totalOrders,
             status: true
         });
     } catch (error) {
@@ -99,7 +97,7 @@ orderController.getRecognizedOrders = async (req, res) => {
     try {
         const page = parseInt(req.query.page);
         const limit = parseInt(req.query.limit);
-        const orders = await Order.find({ recognized: true }).populate('status').populate('faults').populate({
+        const orders = await Order.find({ recognized: true }).populate('status').populate('faults').populate("brand").populate({
             path: 'status_history',
             populate: {
                 path: 'status',
@@ -161,7 +159,7 @@ orderController.createOrderDontRecognizedNothing = async (req, res) => {
         }
 
         await transporter.sendMail({
-            from: `'Empetel' <${process.env.MAIL_USERNAME}>`,
+            from: `'Blackphone' <${process.env.MAIL_USERNAME}>`,
             to: form.email,
             subject: '¡Hemos recibido tu pedido!',
             html: await ConfirmedOrderNotRecognizedEmail({
@@ -183,7 +181,7 @@ orderController.createOrderDontRecognizedNothing = async (req, res) => {
         });
 
         await transporter.sendMail({
-            from: `'Empetel' <${process.env.MAIL_USERNAME}>`,
+            from: `'Blackphone' <${process.env.MAIL_USERNAME}>`,
             to: process.env.OWNER_EMAIL,
             subject: '¡Has recibido un nuevo pedido!',
             html: await ConfirmedOrderNotRecognizedEmailAdmin({
@@ -292,8 +290,8 @@ orderController.createRecognizedLocalOrder = async (req, res) => {
             id: await randomNumber(),
             faults,
             status: initialStatus._id,
-            province: 'Granada',
-            municipie: 'Granada',
+            province: 'Local',
+            municipie: 'Local',
             status_history: [{
                 status: initialStatus._id,
                 date: new Date().getDate() + '/' + (new Date().getMonth() + 1) + '/' + new Date().getFullYear()
@@ -306,7 +304,7 @@ orderController.createRecognizedLocalOrder = async (req, res) => {
 
         if (!newOrder.takeToTheLocal) {
             await transporter.sendMail({
-                from: `'Empetel' <${process.env.MAIL_USERNAME}>`,
+                from: `'Blackphone' <${process.env.MAIL_USERNAME}>`,
                 to: body.email,
                 subject: '¡Hemos recibido tu pedido!',
                 html: await recognizedLocalEmails({
@@ -316,9 +314,9 @@ orderController.createRecognizedLocalOrder = async (req, res) => {
             });
 
             await transporter.sendMail({
-                from: `'Empetel' <${process.env.MAIL_USERNAME}>`,
+                from: `'Blackphone' <${process.env.MAIL_USERNAME}>`,
                 to: process.env.OWNER_EMAIL,
-                subject: '¡Has recibido un nuevo pedido en Granada Capital!',
+                subject: '¡Has recibido un nuevo pedido en Gandía Capital!',
                 html: await recognizedLocalEmailAdmin({
                     ...newOrder._doc,
                     faults: faultsNames,
@@ -328,7 +326,7 @@ orderController.createRecognizedLocalOrder = async (req, res) => {
 
         if (newOrder.takeToTheLocal) {
             await transporter.sendMail({
-                from: `'Empetel' <${process.env.MAIL_USERNAME}>`,
+                from: `'Blackphone' <${process.env.MAIL_USERNAME}>`,
                 to: body.email,
                 subject: '¡Hemos recibido tu cita!',
                 html: await confirmedAppointmentEmailUser({
@@ -341,9 +339,9 @@ orderController.createRecognizedLocalOrder = async (req, res) => {
             });
 
             await transporter.sendMail({
-                from: `'Empetel' <${process.env.MAIL_USERNAME}>`,
+                from: `'Blackphone' <${process.env.MAIL_USERNAME}>`,
                 to: process.env.OWNER_EMAIL,
-                subject: '¡Has recibido una cita en Granada Capital!',
+                subject: '¡Has recibido una cita en Gandía Capital!',
                 html: await confrmedAppointmentEmailAdmin({
                     ...newOrder._doc,
                     faults: faultsNames,
@@ -440,7 +438,7 @@ orderController.createRecognizedOutsideOrder = async (req, res) => {
         await newOrder.save();
 
         await transporter.sendMail({
-            from: `'Empetel' <${process.env.MAIL_USERNAME}>`,
+            from: `'Blackphone' <${process.env.MAIL_USERNAME}>`,
             to: body.email,
             subject: '¡Hemos recibido tu pedido!',
             html: await recognizedOutsideEmails({
@@ -450,7 +448,7 @@ orderController.createRecognizedOutsideOrder = async (req, res) => {
         });
 
         await transporter.sendMail({
-            from: `'Empetel' <${process.env.MAIL_USERNAME}>`,
+            from: `'Blackphone' <${process.env.MAIL_USERNAME}>`,
             to: process.env.OWNER_EMAIL,
             subject: `¡Has recibido un nuevo pedido en ${newOrder.province} ${newOrder.municipie}!`,
             html: await recognizedOutsideEmailAdmin({
@@ -544,7 +542,7 @@ orderController.createDontListenedItemOrder = async (req, res) => {
         await newOrder.save();
 
         await transporter.sendMail({
-            from: `'Empetel' <${process.env.MAIL_USERNAME}>`,
+            from: `'Blackphone' <${process.env.MAIL_USERNAME}>`,
             to: body.email,
             subject: '¡Hemos recibido tu pedido!',
             html: await requirePresupuestEmailUser({
@@ -554,7 +552,7 @@ orderController.createDontListenedItemOrder = async (req, res) => {
         });
 
         await transporter.sendMail({
-            from: `'Empetel' <${process.env.MAIL_USERNAME}>`,
+            from: `'Blackphone' <${process.env.MAIL_USERNAME}>`,
             to: process.env.OWNER_EMAIL,
             subject: `¡Has recibido un nuevo pedido de presupuesto!`,
             html: await requirePresupuestEmailAdmin({
@@ -562,6 +560,103 @@ orderController.createDontListenedItemOrder = async (req, res) => {
                 faults: faultsNames,
             })
         });
+
+        return res.status(201).send({
+            message: 'Orden creada exitosamente',
+            orderId: newOrder.id,
+            status: true
+        });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).send({
+            message: 'Error al crear la orden',
+            status: false
+        });
+    }
+}
+
+orderController.createOrder = async (req, res) => {
+    try {
+        if (req.files && req.files.fault_photos) {
+            const fault_photos = req.files.fault_photos.map(file => `${process.env.BASE_URL}/uploads/${file.filename}`);
+            req.body.fault_photos = fault_photos;
+        }
+
+        const initialStatus = await Status.findOne({ initial: true });
+
+        if (!initialStatus) {
+            return res.status(404).send({
+                message: 'No se encontró el estado inicial',
+                status: false
+            });
+        }
+
+        const newOrder = new Order({
+            ...req.body,
+            id: await randomNumber(),
+            status: initialStatus._id,
+            status_history: [{
+                status: initialStatus._id,
+                date: new Date().getDate() + '/' + (new Date().getMonth() + 1) + '/' + new Date().getFullYear()
+            }]
+        });
+
+        const createdOrder = await newOrder.save();
+
+        const newOrderActualized = await Order.findById(createdOrder._id).populate('status').populate('faults').populate('brand').populate({
+            path: 'status_history',
+            populate: {
+                path: 'status',
+                model: 'Status'
+            }
+        }).populate('additionalCosts');
+
+        const transporter = await nodemailer.createTransport({
+            host: process.env.MAIL_HOST,
+            port: process.env.MAIL_PORT,
+            secure: false,
+            tls: {
+                ciphers: 'SSLv3'
+            },
+            auth: {
+                user: process.env.MAIL_USERNAME,
+                pass: process.env.MAIL_PASSWORD
+            },
+            tls: {
+                rejectUnauthorized: false
+            }
+        });
+
+        if (!newOrder.recognized) {
+            await transporter.sendMail({
+                from: `'Blackphone' <${process.env.MAIL_USERNAME}>`,
+                to: newOrder.contact,
+                subject: '¡Hemos recibido tu pedido!',
+                html: await ConfirmedOrderNotRecognizedEmail({
+                    data: [{
+                        label: 'Nombre',
+                        value: newOrder.name
+                    }, {
+                        label: 'Correo electrónico',
+                        value: newOrder.contact
+                    }],
+                    name: newOrder.name
+                })
+            });
+        }
+
+        if (newOrder.recognized) {
+            await transporter.sendMail({
+                from: `'Blackphone' <${process.env.MAIL_USERNAME}>`,
+                to: newOrderActualized.contact,
+                subject: '¡Hemos recibido tu pedido!',
+                html: await recognizedLocalEmails({
+                    ...newOrderActualized,
+                    faults: newOrderActualized.faults.map(fault => fault.name),
+                    brand: newOrderActualized.brand.name
+                })
+            });
+        }
 
         return res.status(201).send({
             message: 'Orden creada exitosamente',
@@ -600,7 +695,7 @@ orderController.editOrderStatus = async (req, res) => {
 
         const statusFinded = await Status.findById(status);
 
-        const order = await Order.findById(id);
+        const order = await Order.findById(id).populate('status').populate('faults').populate('brand')
 
         const statusHistory = [...order.status_history, {
             status: statusFinded._id,
@@ -612,10 +707,10 @@ orderController.editOrderStatus = async (req, res) => {
             status_history: statusHistory
         });
 
-        if(statusFinded.send) {
+        if (statusFinded.send) {
             await transporter.sendMail({
-                from: `'Empetel' <${process.env.MAIL_USERNAME}>`,
-                to: orderUpdated.email,
+                from: `'Blackphone' <${process.env.MAIL_USERNAME}>`,
+                to: orderUpdated.contact,
                 subject: `¡Tu pedido está: ${statusFinded.name}!`,
                 html: await ChangeStatusEmail({
                     ...orderUpdated._doc,
