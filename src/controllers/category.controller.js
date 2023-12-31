@@ -1,16 +1,16 @@
+const Category = require('../models/Category.model');
 const Brands = require('../models/Brands.model');
-const Prices = require('../models/Prices.model');
 
 const brandsController = {}
 
-brandsController.getBrands = async (req, res) => {
+brandsController.get = async (req, res) => {
     try {
-        const brands = await Brands.find().sort({ name: 1 }).populate('category');
-        console.log(brands);
+        const categories = await Category.find().sort({ name: 1 });
+        console.log(categories);
 
         res.status(200).send({
-            message: 'Brands retrieved successfully',
-            brands,
+            message: 'Category retrieved successfully',
+            categories,
             status: true
         })
     } catch (error) {
@@ -22,15 +22,15 @@ brandsController.getBrands = async (req, res) => {
     }
 }
 
-brandsController.createBrand = async (req, res) => {
+brandsController.create = async (req, res) => {
     try {
         console.log(req.body);
         if (req.files && req.files.images) {
             req.body.image = `${process.env.BASE_URL}/uploads/${req.files.images[0].filename}`;
         }
 
-        const newBrand = new Brands(req.body);
-        await newBrand.save();
+        const newCategory = new Category(req.body);
+        await newCategory.save();
 
         res.status(200).send({
             message: 'Marca creada correctamente',
@@ -45,17 +45,13 @@ brandsController.createBrand = async (req, res) => {
     }
 }
 
-brandsController.editBrand = async (req, res) => {
+brandsController.edit = async (req, res) => {
     try {
-        const { id } = req.params;
-        console.log(req.body);
-        console.log(req.params);
-
         if (req.files && req.files.images) {
             req.body.image = `${process.env.BASE_URL}/uploads/${req.files.images[0].filename}`;
         }
 
-        const brand = await Brands.findByIdAndUpdate(req.params.id, req.body);
+        await Category.findByIdAndUpdate(req.params.id, req.body);
 
         res.status(200).send({
             message: 'Marca actualizada correctamente',
@@ -70,12 +66,12 @@ brandsController.editBrand = async (req, res) => {
     }
 }
 
-brandsController.deleteBrand = async (req, res) => {
+brandsController.delete = async (req, res) => {
     try {
         const { id } = req.params;
 
-        const brand = await Brands.findByIdAndDelete(id);
-        await Prices.deleteMany({ brand: brand._id });
+        const category = await Category.findByIdAndDelete(id);
+        await Brands.deleteMany({ category: category._id });
 
         res.status(200).send({
             message: 'Marca eliminada correctamente',
@@ -84,7 +80,7 @@ brandsController.deleteBrand = async (req, res) => {
     } catch (error) {
         console.log(error);
         res.status(500).send({
-            message: 'Error while deleting brand',
+            message: 'Error while deleting category',
             status: false
         })
     }

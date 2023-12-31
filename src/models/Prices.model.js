@@ -5,6 +5,14 @@ const PricesSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'Brand'
     },
+    category: {
+        type: Schema.Types.ObjectId,
+        ref: 'Category'
+    },
+    image: {
+        type: String,
+        default: null
+    },
     model: String,
     prices: {
         type: Object,

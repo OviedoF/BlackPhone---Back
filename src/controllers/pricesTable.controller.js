@@ -70,6 +70,10 @@ pricesTableController.createPrice = async (req, res) => {
     try {
         const data = JSON.parse(req.body.data);
 
+        if (req.files && req.files.images) {
+            data.image = `${process.env.BASE_URL}/uploads/${req.files.images[0].filename}`;
+        }
+
         const price = new Prices({
             ...data,
             prices: {
@@ -95,6 +99,33 @@ pricesTableController.createPrice = async (req, res) => {
         });
     }
 }
+
+pricesTableController.editPrice = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const data = JSON.parse(req.body.data);
+
+        if (req.files && req.files.images) {
+            data.image = `${process.env.BASE_URL}/uploads/${req.files.images[0].filename}`;
+        }
+
+        await Prices.findByIdAndUpdate(id, data);
+
+        res.status(200).send({
+            data: null,
+            message: 'Actualizado correctamente!',
+            status: true
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({
+            data: null,
+            message: 'Error al actualizar el precio!',
+            status: false
+        });
+    }
+}
+
 
 pricesTableController.updatePrices = async (req, res) => {
     try {

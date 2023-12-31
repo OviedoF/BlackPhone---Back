@@ -9,6 +9,8 @@ router.get('/models/:brand', pricesTableController.getAllModelsOfBrand);
 
 router.get('/', pricesTableController.getPrices);
 router.post('/', pricesTableController.createPrice);
+
+router.put('/:id', pricesTableController.editPrice)
 router.put('/', pricesTableController.updatePrices)
 router.delete('/:id', pricesTableController.deletePrice);
 
