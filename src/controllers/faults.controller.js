@@ -24,6 +24,7 @@ faultsController.getFaults = async (req, res) => {
 faultsController.createFault = async (req, res) => {
     try {
         const areas = JSON.parse(req.body.areas);
+        req.body.id = req.body._id;
         delete req.body._id;
 
         if (req.files && req.files.images) {
@@ -31,7 +32,6 @@ faultsController.createFault = async (req, res) => {
 
             req.body.icon = `${process.env.BASE_URL}/uploads/${icon}`;
         }
-        req.body.id = "_id" + req.body.name.replace(/\s/g, "");
 
         const tableInfo = await PricesTableInfo.findOne();
 
