@@ -63,7 +63,7 @@ const recognizedLocalEmails = async ({ _doc: order}) => {
 
                     <tr style="border: 1px solid #292929;">
                         <th style="text-align: center; padding: 10px;border-bottom: 1px solid #292929;height: 50px;">Marca:</th>
-                        <th style="text-align: center; padding: 10px;border-bottom: 1px solid #292929;height: 50px;">${order.brand.name}</th>
+                        <th style="text-align: center; padding: 10px;border-bottom: 1px solid #292929;height: 50px;">${order.brand}</th>
                     </tr>
 
                     <tr style="border: 1px solid #292929;">

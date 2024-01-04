@@ -652,8 +652,8 @@ orderController.createOrder = async (req, res) => {
                 subject: '¡Hemos recibido tu pedido!',
                 html: await recognizedLocalEmails({
                     ...newOrderActualized,
-                    faults: newOrderActualized.faults.map(fault => fault.name),
-                    brand: newOrderActualized.brand.name
+                    faults: newOrderActualized.faults.length ? newOrderActualized.faults.map(fault => fault.name) : ['Ninguna'],
+                    brand: newOrderActualized.brand ? newOrderActualized.brand.name : newOrderActualized.customBrand
                 })
             });
         }
