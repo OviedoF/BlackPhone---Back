@@ -68,14 +68,13 @@ faultsController.createFault = async (req, res) => {
 faultsController.updateFault = async (req, res) => {
     try {
         const areas = JSON.parse(req.body.areas);
-        delete req.body._id;
+        console.log(req.body);
 
         if (req.files && req.files.images) {
             const icon = req.files.images[0].filename;
 
             req.body.icon = `${process.env.BASE_URL}/uploads/${icon}`;
         }
-        req.body.id = "_id" + req.body.name.replace(/\s/g, "");
 
         const tableInfo = await PricesTableInfo.findOne();
 
@@ -83,16 +82,10 @@ faultsController.updateFault = async (req, res) => {
             const area = areas[i];
 
             const fault = await Faults.findOne({
-                _id: req.body.id,
-                idArea: area.value,
-                area: area.label
-            })
-
-            console.log({
                 id: req.body.id,
                 idArea: area.value,
                 area: area.label
-            });
+            })
 
             if (fault) {
                 await Faults.findByIdAndUpdate(fault._id, req.body);
