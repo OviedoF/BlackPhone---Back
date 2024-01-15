@@ -34,7 +34,7 @@ pricesTableController.getPrices = async (req, res) => {
             position: { $ne: null },
             brand: brand ? brand : { $ne: null },
             model: model ? model : { $ne: null }
-        }).populate('brand').sort({ position: 1 });
+        }).populate('brand');
 
         console.log(page, limit);
 
@@ -125,7 +125,6 @@ pricesTableController.editPrice = async (req, res) => {
         });
     }
 }
-
 
 pricesTableController.updatePrices = async (req, res) => {
     try {
@@ -386,8 +385,7 @@ pricesTableController.downloadPricesPDF = async (req, res) => {
         const prices = await Prices.find({
             brand: brand ? brand : { $ne: null }
         })
-            .populate('brand')
-            .sort({ position: 1 });
+            .populate('brand');
 
         let faults = await Faults.find();
 
@@ -437,8 +435,7 @@ pricesTableController.getAllModelsOfBrand = async (req, res) => {
         const prices = await Prices.find({
             brand: brand ? brand : { $ne: null }
         })
-            .populate('brand')
-            .sort({ position: 1 });
+            .populate('brand');
 
         const models = prices.map(price => price.model);
         console.log(models);
