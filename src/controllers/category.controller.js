@@ -5,7 +5,7 @@ const brandsController = {}
 
 brandsController.get = async (req, res) => {
     try {
-        const categories = await Category.find().sort({ name: 1 });
+        const categories = await Category.find().sort({ updatedAt: 1 });
         console.log(categories);
 
         res.status(200).send({
