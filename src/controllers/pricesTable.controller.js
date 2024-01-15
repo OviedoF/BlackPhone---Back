@@ -34,7 +34,9 @@ pricesTableController.getPrices = async (req, res) => {
             position: { $ne: null },
             brand: brand ? brand : { $ne: null },
             model: model ? model : { $ne: null }
-        }).populate('brand').sort({ position: 1 });
+        }).populate('brand').sort({ 
+            createdAt: 1,
+         }); // * 1 para ordenar de menor a mayor
 
         console.log(page, limit);
 
@@ -387,7 +389,7 @@ pricesTableController.downloadPricesPDF = async (req, res) => {
             brand: brand ? brand : { $ne: null }
         })
             .populate('brand')
-            .sort({ position: 1 });
+            .sort({ createdAt: 1 });
 
         let faults = await Faults.find();
 
@@ -438,7 +440,7 @@ pricesTableController.getAllModelsOfBrand = async (req, res) => {
             brand: brand ? brand : { $ne: null }
         })
             .populate('brand')
-            .sort({ position: 1 });
+            .sort({ createdAt: 1 });
 
         const models = prices.map(price => price.model);
         console.log(models);
