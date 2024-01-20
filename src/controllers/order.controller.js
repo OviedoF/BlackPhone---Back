@@ -628,7 +628,7 @@ orderController.createOrder = async (req, res) => {
         });
 
         if (!newOrder.recognized) {
-            await transporter.sendMail({
+            transporter.sendMail({
                 from: `'Blackphone' <${process.env.MAIL_USERNAME}>`,
                 to: newOrder.contact,
                 subject: '¡Hemos recibido tu pedido!',
@@ -643,17 +643,47 @@ orderController.createOrder = async (req, res) => {
                     name: newOrder.name
                 })
             });
+
+            transporter.sendMail({
+                from: `'Blackphone' <${process.env.MAIL_USERNAME}>`,
+                to: process.env.OWNER_EMAIL,
+                subject: '¡Has recibido un nuevo pedido!',
+                html: await ConfirmedOrderNotRecognizedEmailAdmin({
+                    data: [{
+                        label: 'Nombre',
+                        value: newOrder.name
+                    }, {
+                        label: 'Correo electrónico',
+                        value: newOrder.contact
+                    }],
+                    name: newOrder.name,
+                    id: newOrder.id
+                })
+            });
         }
 
         if (newOrder.recognized) {
-            await transporter.sendMail({
+            transporter.sendMail({
                 from: `'Blackphone' <${process.env.MAIL_USERNAME}>`,
                 to: newOrderActualized.contact,
                 subject: '¡Hemos recibido tu pedido!',
                 html: await recognizedLocalEmails({
                     ...newOrderActualized,
                     faults: newOrderActualized.faults.length ? newOrderActualized.faults.map(fault => fault.name) : ['Ninguna'],
-                    brand: newOrderActualized.brand ? newOrderActualized.brand.name : newOrderActualized.customBrand
+                    brand: newOrderActualized.brand ? newOrderActualized.brand.name : newOrderActualized.customBrand,
+                    additionalCosts: newOrderActualized.additionalCosts.length ? newOrderActualized.additionalCosts.map(additionalCost => additionalCost.name) : [],
+                })
+            });
+
+            transporter.sendMail({
+                from: `'Blackphone' <${process.env.MAIL_USERNAME}>`,
+                to: process.env.OWNER_EMAIL,
+                subject: '¡Has recibido un nuevo pedido!',
+                html: await recognizedLocalEmailAdmin({
+                    ...newOrderActualized,
+                    faults: newOrderActualized.faults.length ? newOrderActualized.faults.map(fault => fault.name) : ['Ninguna'],
+                    brand: newOrderActualized.brand ? newOrderActualized.brand.name : newOrderActualized.customBrand,
+                    additionalCosts: newOrderActualized.additionalCosts.length ? newOrderActualized.additionalCosts.map(additionalCost => additionalCost.name) : []
                 })
             });
         }
