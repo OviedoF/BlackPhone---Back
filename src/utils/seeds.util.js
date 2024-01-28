@@ -177,7 +177,7 @@ const setInitialWebTexts = async () => {
         wholesales: {
             title: 'Mayoristas',
             description: `
-            Si usted es mayorista, distribuidor o tienda de telefonía o electrónica, Blackphone.es le ofrece:
+            Si usted es mayorista, distribuidor o tienda de telefonía o electrónica, blackphoneservice.com le ofrece:
 
             + Descuentos de hasta el 50% sobre PVP en todo nuestro catálogo de la web.
             + Stock real y permanente con envío en 24h por sólo 4,90€ o portes gratis para pedidos superiores a 50€. Sin pedido mínimo.

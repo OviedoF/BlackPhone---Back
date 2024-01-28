@@ -14,5 +14,5 @@ OWNER_EMAIL=blackphone@gmail.com
 
 MAIL_PORT=587
 MAIL_HOST=smtp.ionos.es
-MAIL_USERNAME=sat@blackphone.es
+MAIL_USERNAME=sat@blackphoneservice.com
 MAIL_PASSWORD=Omar-1980

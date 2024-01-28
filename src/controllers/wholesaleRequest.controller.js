@@ -130,7 +130,7 @@ WholesaleRequestController.createWholesaleRequest = async(req, res) => {
                         </a>
                     </li>
                     <li style="font-size: 1.2rem; margin: 20px;">
-                        <a href="https://www.Blackphone.es" style="color: white; text-decoration: none;">
+                        <a href="https://www.blackphoneservice.com" style="color: white; text-decoration: none;">
                             <img src="${process.env.BASE_URL + '/static/web.png'}" alt="web"
                                 style="width: 2em; height: 2em;">
                         </a>
@@ -203,7 +203,7 @@ WholesaleRequestController.createWholesaleRequest = async(req, res) => {
                         </a>
                     </li>
                     <li style="font-size: 1.2rem; margin: 20px;">
-                        <a href="https://www.Blackphone.es" style="color: white; text-decoration: none;">
+                        <a href="https://www.blackphoneservice.com" style="color: white; text-decoration: none;">
                             <img src="${process.env.BASE_URL + '/static/web.png'}" alt="web"
                                 style="width: 2em; height: 2em;">
                         </a>
@@ -330,7 +330,7 @@ WholesaleRequestController.changeStatus = async(req, res) => {
                             </a>
                         </li>
                         <li style="font-size: 1.2rem; margin: 20px;">
-                            <a href="https://www.Blackphone.es" style="color: white; text-decoration: none;">
+                            <a href="https://www.blackphoneservice.com" style="color: white; text-decoration: none;">
                                 <img src="${process.env.BASE_URL + '/static/web.png'}" alt="web"
                                     style="width: 2em; height: 2em;">
                             </a>

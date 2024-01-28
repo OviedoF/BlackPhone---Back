@@ -19,8 +19,8 @@ const recognizedLocalEmails = async ({ _doc: order}) => {
 
             <p style="text-align: center;font-size: 1.2rem; padding: 20px;">
                 Puedes seguir tu pedido en el siguiente link: 
-                <a href="https://blackphone.es/seguir-mi-reparacion" target="_blank">
-                https://blackphone.es/seguir-mi-reparacion
+                <a href="https://blackphoneservice.com/seguir-mi-reparacion" target="_blank">
+                https://blackphoneservice.com/seguir-mi-reparacion
                 </a>
             </p>
 
@@ -170,8 +170,8 @@ const recognizedLocalEmailAdmin = async ({_doc: order}) => {
 
             <p style="text-align: center;font-size: 1.2rem; padding: 20px;">
                 Puedes seguir el pedido en el siguiente link: 
-                <a href="https://blackphone.es/seguir-mi-reparacion" target="_blank">
-                https://blackphone.es/seguir-mi-reparacion
+                <a href="https://blackphoneservice.com/seguir-mi-reparacion" target="_blank">
+                https://blackphoneservice.com/seguir-mi-reparacion
                 </a>
             </p>
 
@@ -320,8 +320,8 @@ const recognizedOutsideEmails = async (order) => {
 
             <p style="text-align: center;font-size: 1.2rem; padding: 20px;">
                 Puedes seguir tu pedido en el siguiente link: 
-                <a href="https://blackphone.es/seguir-mi-reparacion" target="_blank">
-                https://blackphone.es/seguir-mi-reparacion
+                <a href="https://blackphoneservice.com/seguir-mi-reparacion" target="_blank">
+                https://blackphoneservice.com/seguir-mi-reparacion
                 </a>
             </p>
 
@@ -481,8 +481,8 @@ style = "display: flex; align-items: center; justify-content: center; flex-direc
 
             <p style="text-align: center;font-size: 1.2rem; padding: 20px;">
                 Puedes seguir tu pedido en el siguiente link: 
-                <a href="https://blackphone.es/seguir-mi-reparacion" target="_blank">
-                https://blackphone.es/seguir-mi-reparacion
+                <a href="https://blackphoneservice.com/seguir-mi-reparacion" target="_blank">
+                https://blackphoneservice.com/seguir-mi-reparacion
                 </a>
             </p>
 

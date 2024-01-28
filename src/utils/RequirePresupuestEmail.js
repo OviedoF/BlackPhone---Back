@@ -15,8 +15,8 @@ style = "display: flex; align-items: center; justify-content: center; flex-direc
 
             <p style="text-align: center;font-size: 1.2rem; padding: 20px;">
                 Puedes seguir tu pedido en el siguiente link: 
-                <a href="https://blackphone.es/seguir-mi-reparacion" target="_blank">
-                https://blackphone.es/seguir-mi-reparacion
+                <a href="https://blackphoneservice.com/seguir-mi-reparacion" target="_blank">
+                https://blackphoneservice.com/seguir-mi-reparacion
                 </a>
             </p>
 
@@ -113,7 +113,7 @@ style = "display: flex; align-items: center; justify-content: center; flex-direc
                 </a>
             </li>
             <li style="font-size: 1.2rem; margin: 20px;">
-                <a href="https://www.Blackphone.es" style="color: white; text-decoration: none;">
+                <a href="https://www.blackphoneservice.com" style="color: white; text-decoration: none;">
                     <img src="${process.env.BASE_URL + '/static/web.png'}" alt="web"
                         style="width: 2em; height: 2em;">
                 </a>
@@ -234,7 +234,7 @@ style = "display: flex; align-items: center; justify-content: center; flex-direc
                 </a>
             </li>
             <li style="font-size: 1.2rem; margin: 20px;">
-                <a href="https://www.Blackphone.es" style="color: white; text-decoration: none;">
+                <a href="https://www.blackphoneservice.com" style="color: white; text-decoration: none;">
                     <img src="${process.env.BASE_URL + '/static/web.png'}" alt="web"
                         style="width: 2em; height: 2em;">
                 </a>
