@@ -2,7 +2,6 @@ const qrcode = require('qrcode-terminal');
 const { Client, LocalAuth } = require('whatsapp-web.js');
 
 let client = new Client({
-    session: session,
     //qrTimeoutMs: 120000,
     //authTimeoutMs: 120000,
     restartOnAuthFail: true,
