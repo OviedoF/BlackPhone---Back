@@ -1,9 +1,16 @@
 const qrcode = require('qrcode-terminal');
 const { Client, LocalAuth } = require('whatsapp-web.js');
 
-const client = new Client({
+let client = new Client({
+    session: session,
+    //qrTimeoutMs: 120000,
+    //authTimeoutMs: 120000,
+    restartOnAuthFail: true,
+    //takeoverOnConflict: true
+    //takeoverTimeoutMs: 5000
+    puppeteer: {headless: true, args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-extensions']},
     authStrategy: new LocalAuth(),
-});
+  });
 
 const InitializeWPP = () => {
     client.on('qr', (qr) => {
