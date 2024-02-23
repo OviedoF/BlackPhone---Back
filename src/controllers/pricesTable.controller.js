@@ -35,7 +35,7 @@ pricesTableController.getPrices = async (req, res) => {
             brand: brand ? brand : { $ne: null },
             model: model ? model : { $ne: null }
         }).populate('brand').sort({ 
-            createdAt: 1,
+            position: 1,
          }); // * 1 para ordenar de menor a mayor
 
         console.log(page, limit);
@@ -81,7 +81,8 @@ pricesTableController.createPrice = async (req, res) => {
             prices: {
                 ...data.prices,
                 modifiedAt: new Date().toLocaleDateString(),
-            }
+            },
+            position: await Prices.countDocuments() + 1 // * Contar los precios y sumarle 1
         });
 
         await price.save();
@@ -128,7 +129,6 @@ pricesTableController.editPrice = async (req, res) => {
     }
 }
 
-
 pricesTableController.updatePrices = async (req, res) => {
     try {
         const data = JSON.parse(req.body.data);
@@ -171,113 +171,6 @@ pricesTableController.deletePrice = async (req, res) => {
         res.status(500).send({
             data: null,
             message: 'Error al eliminar el precio!',
-            status: false
-        });
-    }
-}
-
-pricesTableController.changePosition = async (req, res) => {
-    try {
-        const { id } = req.params;
-        const { position } = req.body;
-        
-        const price = await Prices.findById(id);
-        const priceWithThatPosition = await Prices.findOne({ position });
-
-        if (priceWithThatPosition) {
-            priceWithThatPosition.position = price.position;
-            price.position = position;
-            await price.save();
-            await priceWithThatPosition.save();
-        } else {
-            price.position = position;
-            await price.save();
-        }
-
-        res.status(200).send({
-            data: null,
-            message: 'Posición cambiada correctamente!',
-            status: true
-        });
-    } catch (error) {
-        console.log(error);
-        res.status(500).send({
-            data: null,
-            message: 'Error al cambiar la posición!',
-            status: false
-        });
-    }
-}
-
-pricesTableController.upPricePosition = async (req, res) => {
-    try {
-        const { id } = req.params;
-
-        const Price = await Prices.findById(id);
-
-        if (Price.position === 1) return res.status(200).send({
-            data: null,
-            message: 'No se puede subir más!',
-            status: false
-        });
-
-        const PriceToChange = await Prices.findOne({ position: Price.position - 1 });
-
-        Price.position = Price.position - 1;
-
-        PriceToChange.position = PriceToChange.position + 1;
-
-        await Price.save();
-        await PriceToChange.save();
-
-        res.status(200).send({
-            data: null,
-            message: 'Posición cambiada correctamente!',
-            status: true
-        });
-    } catch (error) {
-        console.log(error);
-        res.status(500).send({
-            data: null,
-            message: 'Error al cambiar la posición!',
-            status: false
-        });
-    }
-}
-
-pricesTableController.downPricePosition = async (req, res) => {
-    try {
-        const { id } = req.params;
-
-        const Price = await Prices.findById(id);
-
-        const PricesCount = await Prices.countDocuments();
-
-        if (Price.position === PricesCount) return res.status(200).send({
-            data: null,
-            message: 'No se puede bajar más!',
-            status: false
-        });
-
-        const PriceToChange = await Prices.findOne({ position: Price.position + 1 });
-
-        Price.position = Price.position + 1;
-
-        PriceToChange.position = PriceToChange.position - 1;
-
-        await Price.save();
-        await PriceToChange.save();
-
-        res.status(200).send({
-            data: null,
-            message: 'Posición cambiada correctamente!',
-            status: true
-        });
-    } catch (error) {
-        console.log(error);
-        res.status(500).send({
-            data: null,
-            message: 'Error al cambiar la posición!',
             status: false
         });
     }
@@ -389,7 +282,7 @@ pricesTableController.downloadPricesPDF = async (req, res) => {
             brand: brand ? brand : { $ne: null }
         })
             .populate('brand')
-            .sort({ createdAt: 1 });
+            .sort({ position: 1 });
 
         let faults = await Faults.find();
 
@@ -440,7 +333,7 @@ pricesTableController.getAllModelsOfBrand = async (req, res) => {
             brand: brand ? brand : { $ne: null }
         })
             .populate('brand')
-            .sort({ createdAt: 1 });
+            .sort({ position: 1 });
 
         const models = prices.map(price => price.model);
         console.log(models);
@@ -457,6 +350,88 @@ pricesTableController.getAllModelsOfBrand = async (req, res) => {
             message: 'Error al obtener los datos!',
             status: false
         });
+    }
+}
+
+pricesTableController.setPositionsByCreatedAt = async (req, res) => {
+    try {
+        const prices = await Prices.find().populate('brand').sort({ 
+            createdAt: 1,
+         }); // * 1 para ordenar de menor a mayor
+
+        for (let i = 0; i < prices.length; i++) {
+            const price = prices[i];
+
+            await Prices.findByIdAndUpdate(price._id, {
+                position: i + 1
+            })
+        }
+
+        res.status(200).send({
+            data: null,
+            message: 'Posiciones actualizadas correctamente!',
+            status: true
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({
+            data: null,
+            message: 'Error al actualizar las posiciones!',
+            status: false
+        });
+    }
+}
+
+pricesTableController.changePosition = async (req, res) => {
+    try {
+        const { index } = req.body;
+        const { id } = req.params;
+
+        console.log(req.body);
+        console.log(req.params);
+
+        const price = await Prices.findById(id);
+        const prices = await Prices.find();
+
+        if (index > prices.length) {
+            return res.status(400).send({
+                message: 'Índice no válido',
+                status: false
+            })
+        }
+
+        for (let i = 0; i < prices.length; i++) {
+            const precio = prices[i];
+
+            if (price.position > index && precio.position <= price.position && precio.position >= index) {
+                if (precio.position === price.position) {
+                    precio.position = index
+                } else if (precio.position >= index) {
+                    precio.position++
+                }
+            } else {
+                if (precio.position === price.position) {
+                    precio.position = index
+                } else if (precio.position === index) {
+                    precio.position = price.position
+                }
+            }
+
+            await Prices.findByIdAndUpdate(precio._id, {
+                position: precio.position
+            });
+        }
+
+        res.status(200).send({
+            message: 'Índice cambiado correctamente',
+            status: true
+        })
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({
+            message: 'Error while changing index',
+            status: false
+        })
     }
 }
 

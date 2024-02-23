@@ -28,12 +28,6 @@ style = "display: flex; align-items: center; justify-content: center; flex-direc
 
         <ul style="display: flex; width: 100%; list-style: none; justify-content: center; padding: 0;">
             <li style="font-size: 1.2rem; margin: 20px;">
-                <a href="https://www.facebook.com/Blackphone" style="color: white; text-decoration: none;">
-                    <img src="${process.env.BASE_URL + '/static/facebook.png'}" alt="facebook"
-                        style="width: 2em; height: 2em;">
-                </a>
-            </li>
-            <li style="font-size: 1.2rem; margin: 20px;">
                 <a href="https://www.instagram.com/Blackphone" style="color: white; text-decoration: none;">
                     <img src="${process.env.BASE_URL + '/static/instagram.png'}" alt="instagram"
                         style="width: 2em; height: 2em;">
@@ -43,6 +37,12 @@ style = "display: flex; align-items: center; justify-content: center; flex-direc
                 <a href="https://www.blackphoneservice.com" style="color: white; text-decoration: none;">
                     <img src="${process.env.BASE_URL + '/static/web.png'}" alt="web"
                         style="width: 2em; height: 2em;">
+                </a>
+            </li>
+
+            <li style="font-size: 1.2rem; margin: 20px;">
+                <a href="https://api.whatsapp.com/send?phone=34623199205&text=Hola!" style="color: white; text-decoration: none;">
+                    <img src="${process.env.BASE_URL + '/static/whatsapp.png'}" alt="whatsapp" style="width: 2em; height: 2em;">
                 </a>
             </li>
         </ul>

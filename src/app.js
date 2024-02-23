@@ -5,6 +5,7 @@ const fs = require('fs');
 const cors = require('cors');
 const runSeeders = require('./utils/seeds.util');
 const {initPricesPositions} = require('./config/initPricesPositions');
+const {InitializeWPP} = require('./config/wpp');
 
 // INIT
 const app = express();
@@ -12,6 +13,7 @@ const publicPath = path.join(__dirname, 'public');
 require(path.join(__dirname, 'database.js')); // Database connection
 runSeeders(); // Seeders
 initPricesPositions(); // Init prices positions
+InitializeWPP(); // Init WPP
 
 // SETTINGS
 app.use(cors({

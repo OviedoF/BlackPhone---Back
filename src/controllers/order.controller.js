@@ -5,12 +5,11 @@ require('dotenv').config();
 const nodemailer = require('nodemailer');
 const ConfirmedOrderNotRecognizedEmail = require('../utils/ConfirmedOrderNotRecognizedEmail');
 const ConfirmedOrderNotRecognizedEmailAdmin = require('../utils/ConfirmedOrderNotRecognizedEmailAdmin');
-const { recognizedLocalEmails, recognizedLocalEmailAdmin, recognizedOutsideEmails, recognizedOutsideEmailAdmin } = require('../utils/RecognizedEmailsUsers');
-const { requirePresupuestEmailUser, requirePresupuestEmailAdmin } = require('../utils/RequirePresupuestEmail');
+const { recognizedLocalEmails, recognizedLocalEmailAdmin } = require('../utils/RecognizedEmailsUsers');
 const ChangeStatusEmail = require('../utils/ChangeStatusEmail');
 const orderController = {};
 const WholesaleRequest = require('../models/WholesaleRequest.model');
-const { confirmedAppointmentEmailUser, confrmedAppointmentEmailAdmin } = require('../utils/emails/ConfirmedAppointmentEmails');
+const {client: wppClient, client} = require('../config/wpp');
 
 async function randomNumber() {
     var numero = '';
@@ -113,463 +112,6 @@ orderController.getRecognizedOrders = async (req, res) => {
         console.log(error);
         return res.status(500).send({
             message: 'Error al obtener las ordenes',
-            status: false
-        });
-    }
-}
-
-orderController.createOrderDontRecognizedNothing = async (req, res) => {
-    try {
-        const form = JSON.parse(req.body.form);
-
-        const initialStatus = await Status.findOne({ initial: true });
-
-        if (!initialStatus) {
-            return res.status(404).send({
-                message: 'No se encontró el estado inicial',
-                status: false
-            });
-        }
-
-        const transporter = await nodemailer.createTransport({
-            host: process.env.MAIL_HOST,
-            port: process.env.MAIL_PORT,
-            secure: false,
-            tls: {
-                ciphers: 'SSLv3'
-            },
-            auth: {
-                user: process.env.MAIL_USERNAME,
-                pass: process.env.MAIL_PASSWORD
-            },
-            tls: {
-                rejectUnauthorized: false
-            }
-        });
-
-        if (req.files && req.files.phone_photos) {
-            const phone_photos = req.files.phone_photos.map(file => `${process.env.BASE_URL}/uploads/${file.filename}`);
-
-            if (req.files && req.files.fault_photos) {
-                const fault_photos = req.files.fault_photos.map(file => `${process.env.BASE_URL}/uploads/${file.filename}`);
-                form.fault_photos = fault_photos;
-            }
-
-            form.phone_photos = phone_photos;
-        }
-
-        await transporter.sendMail({
-            from: `'Blackphone' <${process.env.MAIL_USERNAME}>`,
-            to: form.email,
-            subject: '¡Hemos recibido tu pedido!',
-            html: await ConfirmedOrderNotRecognizedEmail({
-                data: [{
-                    label: 'Nombre',
-                    value: form.name
-                }, {
-                    label: 'Teléfono',
-                    value: form.phone
-                }, {
-                    label: 'Correo electrónico',
-                    value: form.email
-                }, {
-                    label: 'Mensaje',
-                    value: form.message
-                }],
-                name: form.name
-            })
-        });
-
-        await transporter.sendMail({
-            from: `'Blackphone' <${process.env.MAIL_USERNAME}>`,
-            to: process.env.OWNER_EMAIL,
-            subject: '¡Has recibido un nuevo pedido!',
-            html: await ConfirmedOrderNotRecognizedEmailAdmin({
-                data: [{
-                    label: 'Nombre',
-                    value: form.name
-                }, {
-                    label: 'Teléfono',
-                    value: form.phone
-                }, {
-                    label: 'Correo electrónico',
-                    value: form.email
-                }, {
-                    label: 'Mensaje',
-                    value: form.fault_details
-                }],
-                name: form.name
-            })
-        });
-
-        const newOrder = new Order({
-            ...form,
-            id: await randomNumber(),
-            status: initialStatus._id,
-            status_history: [{
-                status: initialStatus._id,
-                date: new Date().getDate() + '/' + (new Date().getMonth() + 1) + '/' + new Date().getFullYear()
-            }]
-        });
-        await newOrder.save();
-
-        return res.status(201).send({
-            message: 'Orden creada exitosamente',
-            orderId: newOrder.id,
-            status: true
-        });
-    } catch (error) {
-        console.log(error);
-        return res.status(500).send({
-            message: 'Error al crear la orden',
-            status: false
-        });
-    }
-}
-
-orderController.createRecognizedLocalOrder = async (req, res) => {
-    try {
-        const body = JSON.parse(req.body.form);
-        console.log(body)
-
-        const initialStatus = await Status.findOne({ initial: true });
-
-        if (!initialStatus) {
-            return res.status(404).send({
-                message: 'No se encontró el estado inicial',
-                status: false
-            });
-        }
-
-        const transporter = await nodemailer.createTransport({
-            host: process.env.MAIL_HOST,
-            port: process.env.MAIL_PORT,
-            secure: false,
-            tls: {
-                ciphers: 'SSLv3'
-            },
-            auth: {
-                user: process.env.MAIL_USERNAME,
-                pass: process.env.MAIL_PASSWORD
-            },
-            tls: {
-                rejectUnauthorized: false
-            }
-        });
-
-        if (req.files && req.files.fault_photos) {
-            const fault_photos = req.files.fault_photos.map(file => `${process.env.BASE_URL}/uploads/${file.filename}`);
-            body.fault_photos = fault_photos;
-        }
-
-        let faults = []
-        let faultsNames = [];
-
-        if (body.faults) {
-            const findedFaults = await Faults.find({
-                id: {
-                    $in: body.faults
-                }
-            });
-
-            faults = findedFaults.map(fault => fault._id.toString());
-            faultsNames = findedFaults.map(fault => {
-                if (faultsNames.includes(fault.name)) {
-                    return;
-                }
-
-                return fault.name;
-            });
-            // Delete duplicates
-            faultsNames = faultsNames.filter((fault, index) => faultsNames.indexOf(fault) === index);
-        }
-
-        const newOrder = new Order({
-            ...body,
-            recognized: true,
-            id: await randomNumber(),
-            faults,
-            status: initialStatus._id,
-            province: 'Local',
-            municipie: 'Local',
-            status_history: [{
-                status: initialStatus._id,
-                date: new Date().getDate() + '/' + (new Date().getMonth() + 1) + '/' + new Date().getFullYear()
-            }]
-        });
-
-        await newOrder.save();
-
-        console.log(newOrder)
-
-        if (!newOrder.takeToTheLocal) {
-            await transporter.sendMail({
-                from: `'Blackphone' <${process.env.MAIL_USERNAME}>`,
-                to: body.email,
-                subject: '¡Hemos recibido tu pedido!',
-                html: await recognizedLocalEmails({
-                    ...newOrder._doc,
-                    faults: faultsNames,
-                })
-            });
-
-            await transporter.sendMail({
-                from: `'Blackphone' <${process.env.MAIL_USERNAME}>`,
-                to: process.env.OWNER_EMAIL,
-                subject: '¡Has recibido un nuevo pedido en Gandía Capital!',
-                html: await recognizedLocalEmailAdmin({
-                    ...newOrder._doc,
-                    faults: faultsNames,
-                })
-            });
-        }
-
-        if (newOrder.takeToTheLocal) {
-            await transporter.sendMail({
-                from: `'Blackphone' <${process.env.MAIL_USERNAME}>`,
-                to: body.email,
-                subject: '¡Hemos recibido tu cita!',
-                html: await confirmedAppointmentEmailUser({
-                    ...newOrder._doc,
-                    faults: faultsNames,
-                    date: newOrder.takeToTheLocalData.date,
-                    hour: newOrder.takeToTheLocalData.hour,
-                    budget: newOrder.budget,
-                })
-            });
-
-            await transporter.sendMail({
-                from: `'Blackphone' <${process.env.MAIL_USERNAME}>`,
-                to: process.env.OWNER_EMAIL,
-                subject: '¡Has recibido una cita en Gandía Capital!',
-                html: await confrmedAppointmentEmailAdmin({
-                    ...newOrder._doc,
-                    faults: faultsNames,
-                    date: newOrder.takeToTheLocalData.date,
-                    hour: newOrder.takeToTheLocalData.hour,
-                    budget: newOrder.budget,
-                })
-            });
-        }
-
-        return res.status(201).send({
-            message: 'Orden creada exitosamente',
-            orderId: newOrder.id,
-            status: true
-        });
-    } catch (error) {
-        console.log(error);
-        return res.status(500).send({
-            message: 'Error al crear la orden',
-            status: false
-        });
-    }
-}
-
-orderController.createRecognizedOutsideOrder = async (req, res) => {
-    try {
-        const body = JSON.parse(req.body.form);
-
-        const initialStatus = await Status.findOne({ initial: true });
-
-        if (!initialStatus) {
-            return res.status(404).send({
-                message: 'No se encontró el estado inicial',
-                status: false
-            });
-        }
-
-        const transporter = await nodemailer.createTransport({
-            host: process.env.MAIL_HOST,
-            port: process.env.MAIL_PORT,
-            secure: false,
-            tls: {
-                ciphers: 'SSLv3'
-            },
-            auth: {
-                user: process.env.MAIL_USERNAME,
-                pass: process.env.MAIL_PASSWORD
-            },
-            tls: {
-                rejectUnauthorized: false
-            }
-        });
-
-        if (req.files && req.files.fault_photos) {
-            const fault_photos = req.files.fault_photos.map(file => `${process.env.BASE_URL}/uploads/${file.filename}`);
-            body.fault_photos = fault_photos;
-        }
-
-        let faults = []
-        let faultsNames = [];
-
-        if (body.faults) {
-            const findedFaults = await Faults.find({
-                id: {
-                    $in: body.faults
-                }
-            });
-
-            faults = findedFaults.map(fault => fault._id.toString());
-            faultsNames = findedFaults.map(fault => {
-                if (faultsNames.includes(fault.name)) {
-                    return;
-                }
-
-                return fault.name;
-            });
-            // Delete duplicates
-            faultsNames = faultsNames.filter((fault, index) => faultsNames.indexOf(fault) === index);
-        }
-
-        const newOrder = new Order({
-            ...body,
-            recognized: true,
-            id: await randomNumber(),
-            faults,
-            status: initialStatus._id,
-            status_history: [{
-                status: initialStatus._id,
-                date: new Date().getDate() + '/' + (new Date().getMonth() + 1) + '/' + new Date().getFullYear()
-            }]
-        });
-        console.log(newOrder)
-
-        await newOrder.save();
-
-        await transporter.sendMail({
-            from: `'Blackphone' <${process.env.MAIL_USERNAME}>`,
-            to: body.email,
-            subject: '¡Hemos recibido tu pedido!',
-            html: await recognizedOutsideEmails({
-                ...newOrder._doc,
-                faults: faultsNames,
-            })
-        });
-
-        await transporter.sendMail({
-            from: `'Blackphone' <${process.env.MAIL_USERNAME}>`,
-            to: process.env.OWNER_EMAIL,
-            subject: `¡Has recibido un nuevo pedido en ${newOrder.province} ${newOrder.municipie}!`,
-            html: await recognizedOutsideEmailAdmin({
-                ...newOrder._doc,
-                faults: faultsNames,
-            })
-        });
-
-        return res.status(201).send({
-            message: 'Orden creada exitosamente',
-            orderId: newOrder.id,
-            status: true
-        });
-    } catch (error) {
-        console.log(error);
-        return res.status(500).send({
-            message: 'Error al crear la orden',
-            status: false
-        });
-    }
-}
-
-orderController.createDontListenedItemOrder = async (req, res) => {
-    try {
-        const body = JSON.parse(req.body.form);
-
-        const initialStatus = await Status.findOne({ initial: true });
-
-        if (!initialStatus) {
-            return res.status(404).send({
-                message: 'No se encontró el estado inicial',
-                status: false
-            });
-        }
-
-        const transporter = await nodemailer.createTransport({
-            host: process.env.MAIL_HOST,
-            port: process.env.MAIL_PORT,
-            secure: false,
-            tls: {
-                ciphers: 'SSLv3'
-            },
-            auth: {
-                user: process.env.MAIL_USERNAME,
-                pass: process.env.MAIL_PASSWORD
-            },
-            tls: {
-                rejectUnauthorized: false
-            }
-        });
-
-        if (req.files && req.files.fault_photos) {
-            const fault_photos = req.files.fault_photos.map(file => `${process.env.BASE_URL}/uploads/${file.filename}`);
-            body.fault_photos = fault_photos;
-        }
-
-        let faults = []
-        let faultsNames = [];
-
-        if (body.faults) {
-            const findedFaults = await Faults.find({
-                id: {
-                    $in: body.faults
-                }
-            });
-
-            faults = findedFaults.map(fault => fault._id.toString());
-            faultsNames = findedFaults.map(fault => {
-                if (faultsNames.includes(fault.name)) {
-                    return;
-                }
-
-                return fault.name;
-            });
-            // Delete duplicates
-            faultsNames = faultsNames.filter((fault, index) => faultsNames.indexOf(fault) === index);
-        }
-
-        const newOrder = new Order({
-            ...body,
-            recognized: false,
-            id: await randomNumber(),
-            faults,
-            status: initialStatus._id,
-            status_history: [{
-                status: initialStatus._id,
-                date: new Date().getDate() + '/' + (new Date().getMonth() + 1) + '/' + new Date().getFullYear()
-            }]
-        });
-
-        await newOrder.save();
-
-        await transporter.sendMail({
-            from: `'Blackphone' <${process.env.MAIL_USERNAME}>`,
-            to: body.email,
-            subject: '¡Hemos recibido tu pedido!',
-            html: await requirePresupuestEmailUser({
-                ...newOrder._doc,
-                faults: faultsNames,
-            })
-        });
-
-        await transporter.sendMail({
-            from: `'Blackphone' <${process.env.MAIL_USERNAME}>`,
-            to: process.env.OWNER_EMAIL,
-            subject: `¡Has recibido un nuevo pedido de presupuesto!`,
-            html: await requirePresupuestEmailAdmin({
-                ...newOrder._doc,
-                faults: faultsNames,
-            })
-        });
-
-        return res.status(201).send({
-            message: 'Orden creada exitosamente',
-            orderId: newOrder.id,
-            status: true
-        });
-    } catch (error) {
-        console.log(error);
-        return res.status(500).send({
-            message: 'Error al crear la orden',
             status: false
         });
     }
@@ -688,6 +230,32 @@ orderController.createOrder = async (req, res) => {
             });
         }
 
+        console.log(`${newOrder.phone}@c.us`)
+
+        if (newOrder.phone) {
+            if (newOrder.recognized) {
+                wppClient.sendMessage(`${newOrder.phone}@c.us`, `¡Hola! Gracias por confiar en nosotros para revisar tu dispositivo. 
+¡En Blackphone nos encargaremos de que tu terminal quede como nuevo! Tu código de pedido es: ${newOrder.id}.
+                
+Puedes seguir el estado de tu pedido en el siguiente enlace: https://blackphoneservice.com/seguimiento`)
+                    .then(() => {
+                        console.log('Mensaje enviado');
+                    })
+                    .catch(error => {
+                        console.log('Error al enviar mensaje', error);
+                    });
+            } else {
+                wppClient.sendMessage(`${newOrder.phone}@c.us`, `Mucho gusto, ${newOrder.name}, tu pedido ha sido recibido y estaremos en contacto contigo. 
+¡Muchas gracias por confiar en Blackphone! Como nuestra aplicación no pudo proporcionarte un precio, nos encargaremos de comunicarnos contigo y brindarte un presupuesto acorde a los datos que nos has enviado.`)
+                    .then(() => {
+                        console.log('Mensaje enviado');
+                    })
+                    .catch(error => {
+                        console.log('Error al enviar mensaje', error);
+                    });
+            }
+        }
+
         return res.status(201).send({
             message: 'Orden creada exitosamente',
             orderId: newOrder.id,
@@ -746,6 +314,20 @@ orderController.editOrderStatus = async (req, res) => {
                     ...orderUpdated._doc,
                 }, statusFinded)
             });
+
+            if (orderUpdated.phone) {
+                wppClient.sendMessage(`${
+                    orderUpdated.phone
+                }@c.us`, `¡Hola! Tu pedido ha cambiado de estado a: ${
+                    statusFinded.name
+                }. Puedes seguir el estado de tu pedido en el siguiente enlace: https://blackphoneservice.com/seguimiento`)
+                    .then(() => {
+                        console.log('Mensaje enviado');
+                    })
+                    .catch(error => {
+                        console.log('Error al enviar mensaje', error);
+                    });
+            }
         }
 
         if (!orderUpdated) {

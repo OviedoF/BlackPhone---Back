@@ -19,8 +19,8 @@ const recognizedLocalEmails = async ({ _doc: order}) => {
 
             <p style="text-align: center;font-size: 1.2rem; padding: 20px;">
                 Puedes seguir tu pedido en el siguiente link: 
-                <a href="https://blackphoneservice.com/seguir-mi-reparacion" target="_blank">
-                https://blackphoneservice.com/seguir-mi-reparacion
+                <a href="https://blackphoneservice.com/seguimiento" target="_blank">
+                https://blackphoneservice.com/seguimiento
                 </a>
             </p>
 
@@ -170,8 +170,8 @@ const recognizedLocalEmailAdmin = async ({_doc: order}) => {
 
             <p style="text-align: center;font-size: 1.2rem; padding: 20px;">
                 Puedes seguir el pedido en el siguiente link: 
-                <a href="https://blackphoneservice.com/seguir-mi-reparacion" target="_blank">
-                https://blackphoneservice.com/seguir-mi-reparacion
+                <a href="https://blackphoneservice.com/seguimiento" target="_blank">
+                https://blackphoneservice.com/seguimiento
                 </a>
             </p>
 
@@ -286,10 +286,17 @@ const recognizedLocalEmailAdmin = async ({_doc: order}) => {
                         style="width: 2em; height: 2em;">
                 </a>
             </li>
+            
             <li style="font-size: 1.2rem; margin: 20px;">
                 <a href="https://blackphoneservice.com/" style="color: white; text-decoration: none;">
                     <img src="${process.env.BASE_URL + '/static/web.png'}" alt="web"
                         style="width: 2em; height: 2em;">
+                </a>
+            </li>
+
+            <li style="font-size: 1.2rem; margin: 20px;">
+                <a href="https://api.whatsapp.com/send?phone=34623199205&text=Hola!" style="color: white; text-decoration: none;">
+                    <img src="${process.env.BASE_URL + '/static/whatsapp.png'}" alt="whatsapp" style="width: 2em; height: 2em;">
                 </a>
             </li>
         </ul>
@@ -320,8 +327,8 @@ const recognizedOutsideEmails = async (order) => {
 
             <p style="text-align: center;font-size: 1.2rem; padding: 20px;">
                 Puedes seguir tu pedido en el siguiente link: 
-                <a href="https://blackphoneservice.com/seguir-mi-reparacion" target="_blank">
-                https://blackphoneservice.com/seguir-mi-reparacion
+                <a href="https://blackphoneservice.com/seguimiento" target="_blank">
+                https://blackphoneservice.com/seguimiento
                 </a>
             </p>
 
@@ -481,8 +488,8 @@ style = "display: flex; align-items: center; justify-content: center; flex-direc
 
             <p style="text-align: center;font-size: 1.2rem; padding: 20px;">
                 Puedes seguir tu pedido en el siguiente link: 
-                <a href="https://blackphoneservice.com/seguir-mi-reparacion" target="_blank">
-                https://blackphoneservice.com/seguir-mi-reparacion
+                <a href="https://blackphoneservice.com/seguimiento" target="_blank">
+                https://blackphoneservice.com/seguimiento
                 </a>
             </p>
 
