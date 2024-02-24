@@ -4,7 +4,6 @@ const Faults = require('../models/Faults.model');
 const pricesTableController = {};
 const pdfsMaker = require('../utils/PricesPdfMaker');
 const path = require('path');
-const {setPositions} = require('../config/initPricesPositions');
 
 pricesTableController.getPricesTableInfo = async (req, res) => {
     try {
@@ -86,7 +85,6 @@ pricesTableController.createPrice = async (req, res) => {
         });
 
         await price.save();
-        await setPositions();
 
         res.status(200).send({
             data: price,
