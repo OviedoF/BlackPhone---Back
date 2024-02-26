@@ -17,6 +17,6 @@ router.delete('/:id', pricesTableController.deletePrice);
 
 router.post('/calculateBudget', pricesTableController.calculateBudget);
 
-router.get('/setPositions', pricesTableController.setPositionsByCreatedAt);
+// router.get('/setPositions', pricesTableController.setPositionsByCreatedAt);
 
 module.exports = router;
