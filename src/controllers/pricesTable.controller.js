@@ -5,6 +5,20 @@ const pricesTableController = {};
 const pdfsMaker = require('../utils/PricesPdfMaker');
 const path = require('path');
 
+const orderPricesIfOnePositionNotExists = async (prices) => {
+    for (let i = 0; i < prices.length; i++) {
+        const price = prices[i];
+
+        if (price.position !== i + 1) {
+            await Prices.findByIdAndUpdate(price._id, {
+                position: i + 1
+            });
+
+            price.position = i + 1;
+        }
+    }
+}
+
 pricesTableController.getPricesTableInfo = async (req, res) => {
     try {
         const pricesTableInfo = await PricesTableInfo.findOne().populate('faults');
@@ -28,18 +42,18 @@ pricesTableController.getPrices = async (req, res) => {
         const { page, limit, brand, model } = req.query;
 
         let prices
-        
+
         prices = await Prices.find({
             position: { $ne: null },
             brand: brand ? brand : { $ne: null },
             model: model ? model : { $ne: null }
-        }).populate('brand').sort({ 
+        }).populate('brand').sort({
             position: 1,
-         }); // * 1 para ordenar de menor a mayor
+        }); // * 1 para ordenar de menor a mayor
 
         console.log(page, limit);
 
-        if(page && limit !== 'undefined' && limit) {
+        if (page && limit !== 'undefined' && limit) {
             const startIndex = (parseInt(page) - 1) * parseInt(limit);
             const endIndex = parseInt(page) * parseInt(limit);
 
@@ -156,7 +170,12 @@ pricesTableController.deletePrice = async (req, res) => {
     try {
         const { id } = req.params;
 
-        await Prices.findByIdAndDelete(id);
+        await Prices.findByIdAndDelete(id)
+
+        const priceUpdated = await Prices.find().sort({
+            position: 1,
+        });
+        await orderPricesIfOnePositionNotExists(priceUpdated);
 
         res.status(200).send({
             data: null,
@@ -272,7 +291,7 @@ pricesTableController.downloadPricesPDF = async (req, res) => {
 
         const faultsToPrintIds = faultsToPrint ? faultsToPrint.split(',') : null;
 
-        if(faultsToPrintIds) faultsToPrintIds.pop();
+        if (faultsToPrintIds) faultsToPrintIds.pop();
 
         console.log(faultsToPrintIds);
 
@@ -353,9 +372,9 @@ pricesTableController.getAllModelsOfBrand = async (req, res) => {
 
 pricesTableController.setPositionsByCreatedAt = async (req, res) => {
     try {
-        const prices = await Prices.find().populate('brand').sort({ 
+        const prices = await Prices.find().populate('brand').sort({
             createdAt: 1,
-         }); // * 1 para ordenar de menor a mayor
+        }); // * 1 para ordenar de menor a mayor
 
         for (let i = 0; i < prices.length; i++) {
             const price = prices[i];
@@ -385,11 +404,10 @@ pricesTableController.changePosition = async (req, res) => {
         const { index } = req.body;
         const { id } = req.params;
 
-        console.log(req.body);
-        console.log(req.params);
-
         const price = await Prices.findById(id);
-        const prices = await Prices.find();
+        const prices = await Prices.find().sort({
+            position: 1,
+        });
 
         if (index > prices.length) {
             return res.status(400).send({
@@ -419,6 +437,11 @@ pricesTableController.changePosition = async (req, res) => {
                 position: precio.position
             });
         }
+
+        const priceUpdated = await Prices.find().sort({
+            position: 1,
+        });
+        await orderPricesIfOnePositionNotExists(priceUpdated);
 
         res.status(200).send({
             message: 'Índice cambiado correctamente',
